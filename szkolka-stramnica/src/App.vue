@@ -2,26 +2,39 @@
   <div>
     <Navbar />
     
-    <header class="hero">
-      <div class="hero-text">
-        <h1>Rośliny ozdobne i drzewa</h1>
-        <p>Pasja, która rośnie od 1994 roku.</p>
-        <button>Sprawdź ofertę</button>
+    <Hero />
+    
+    <div class="container">
+      <div id="opis">
+         <Opis />
       </div>
-    </header>
-
-    <div id="oferta">
-       <Oferta />
+      <div id="oferta">
+         <Oferta />
+      </div>
+    </div>
+    <div id="kontakt">
+      <GoogleMap />
     </div>
   </div>
 </template>
 
 <script setup>
 import Navbar from './components/Navbar.vue';
+import Hero from './components/Hero.vue';
+import Opis from './components/Opis.vue';
+import Oferta from './components/Oferta.vue';
+import GoogleMap from './components/GoogleMap.vue'
 </script>
 
 <style>
-/* Style globalne dla całej strony */
+/* Style globalne */
+/* Dodaj to do sekcji <style> w App.vue */
+.container {
+  max-width: 1500px; /* Maksymalna szerokość treści */
+  margin: 0 auto;    /* Centrowanie */
+  padding: 0 20px;   /* Bezpieczny odstęp na telefonach */
+  width: 100%;       /* Zapewnia responsywność */
+}
 * {
   margin: 0;
   padding: 0;
@@ -31,28 +44,6 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   line-height: 1.6;
   color: #333;
-}
-.hero {
-  height: 60vh;
-  background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-              url('https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&q=80&w=1000');
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  text-align: center;
-}
-.hero h1 { font-size: 3rem; margin-bottom: 10px; }
-.hero button {
-  background: #2e7d32;
-  color: white;
-  border: none;
-  padding: 10px 25px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-top: 20px;
+  background-color: #fcfdfc; /* Lekki odcień bieli/zieleni pasujący do szkółki */
 }
 </style>
