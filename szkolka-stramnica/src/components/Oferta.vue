@@ -26,30 +26,34 @@
 </template>
 
 <style scoped>
-  .oferta-text {
-		max-width: 600px;
-		text-align: left;
-
-	}
-	.oferta-text p {
-		margin-bottom: 20px;
-		line-height: 1.8;
-	}
-
   .oferta-container {
     padding: 50px 20px;
-    text-align: center;
+    text-align: center; /* To centruje h2 i inline-blocki */
   }
+
   h2 {
     color: #2e7d32;
     margin-bottom: 30px;
   }
+
+  .oferta-text {
+    max-width: 1000px;
+    margin: 0 auto 40px auto; /* KLUCZ: Centrowanie bloku na stronie */
+    text-align: center;       /* Centrowanie tekstu wewnątrz */
+  }
+
+  .oferta-text p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+  }
+
   .rosliny-grid {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
   }
+
   .karta {
     background: white;
     border: 1px solid #e0e0e0;
