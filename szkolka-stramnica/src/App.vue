@@ -10,6 +10,10 @@ import Navbar from './components/Navbar.vue';
 </script>
 
 <style>
+html {
+  scroll-behavior: smooth;
+}
+
 .container {
   max-width: 1500px;
   margin: 0 auto;

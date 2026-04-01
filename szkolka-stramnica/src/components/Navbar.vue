@@ -3,7 +3,9 @@
     <div class="nav-content">
       
       <div class="left-element">
-        <img src="../assets/logo.jpeg" alt="Logo" class="logo-img">
+        <router-link to="/" class="logo-link">
+          <img src="../assets/logo.jpeg" alt="Logo" class="logo-img">
+        </router-link>
       </div>
 
       <div class="right-element">
@@ -15,7 +17,7 @@
               <div class="info-text">
                 <span class="info-label">Adres</span>
                 <span class="info-value">Stramnica 36J, Kołobrzeg</span>
-                <a href="#kontakt" class="map-button">Jak dojechać</a>
+                <a href="#map" class="map-button">Jak dojechać</a>
               </div>
             </div>
             
@@ -104,21 +106,38 @@
   transition: all 0.3s ease;
 }
 
-/* KONTENER ŚRODKUJĄCY - to on robi "pływające marginesy" */
 .nav-content {
-  max-width: 1000px; /* Maksymalna szerokość treści */
-  margin: 0 auto;    /* Centrowanie */
-  padding: 0 20px;   /* Bezpieczny margines na małych ekranach */
-  height: 140px;     /* Wysokość Navbaru */
+  max-width: 1200px; /* Zwiększyłem szerokość dla lepszego efektu */
+  margin: 0 auto;
+  padding: 0 20px;
+  height: 140px;
   display: flex;
-  align-items: stretch;
+  justify-content: center; /* Centruje menu w osi głównej */
+  align-items: center;    /* Centruje w pionie */
+  position: relative;     /* Ważne dla logo */
+  transition: height 0.3s ease;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none; /* Usuwa ewentualne podkreślenia */
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.logo-link:hover {
+  opacity: 0.7; /* Delikatny efekt po najechaniu, żeby użytkownik wiedział, że to klikalne */
 }
 
 .left-element {
+  position: absolute;
+  left: 20px; /* Logo trzyma się lewej krawędzi kontenera */
   display: flex;
   align-items: center;
-  padding-right: 40px;
+  padding-right: 0; /* Nie potrzebujemy już marginesu z prawej */
 }
+
 
 .logo-img {
   height: 110px;
@@ -127,16 +146,17 @@
 }
 
 .right-element {
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Rozpycha info do góry, menu na dół */
+  align-items: center; /* Centruje elementy w poziomie względem siebie */
+  justify-content: center;
+  gap: 10px; /* Dodaje odstęp między info a menu */
 }
 
 .top-info-row {
   display: flex;
-  justify-content: flex-end;
-  padding-top: 15px;
+  justify-content: center;
+  width: 100%;
 }
 
 .info-group {
@@ -282,7 +302,7 @@
 .bottom-nav {
   display: flex;
   justify-content: center;
-  padding-bottom: 15px;
+  width: 100%;
 }
 
 .menu {
@@ -318,6 +338,7 @@
   height: 2px;
   background-color: #2e7d32;
 }
+
 
 /* Responsywność dla tabletów i telefonów */
 @media (max-width: 1000px) {
@@ -365,18 +386,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
 });
-
-
-
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
-
 
 
 const openInfo = ref('');
