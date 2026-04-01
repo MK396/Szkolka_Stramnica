@@ -1,8 +1,11 @@
 <template>
   <div class="katalog-page">
     <div class="container">
-      <h1>Nasze Rośliny</h1>
-      <p class="subtitle">Przejrzyj asortyment dostępny w naszej szkółce</p>
+      <header class="section-header">
+        <h1>Katalog roślin</h1>
+        <div class="underline"></div>
+      </header>
+      <p class="subtitle">Przejrzyj rośliny dostępne w naszej szkółce. W asortymencie może nie być wszytskich dostępnych roślin w naszej szkółce. Dlatego zachęcamy do kontaktu z nami lub przyjechania osobiście, aby uzyskać więcej informacji.</p>
 
       <div class="product-grid">
         <div v-for="(roslina, index) in rosliny" :key="index" class="product-card">
@@ -16,7 +19,6 @@
             <p class="description">{{ roslina.opis }}</p>
             <div class="card-footer">
               <span class="price" v-if="roslina.cena">{{ roslina.cena }} zł</span>
-              <router-link to="/kontakt" class="ask-button">Zapytaj o produkt</router-link>
             </div>
           </div>
         </div>
@@ -107,14 +109,28 @@ const rosliny = ref([
   margin: 0 auto;
 }
 
+.section-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
 h1 {
   color: #2e7d32;
-  text-align: center;
+  font-size: 2.5rem;
   margin-bottom: 10px;
 }
 
+.underline {
+  width: 60px;
+  height: 4px;
+  background-color: #2e7d32;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+
 .subtitle {
-  text-align: center;
+  text-align: left;
   color: #666;
   margin-bottom: 50px;
 }
@@ -190,8 +206,8 @@ h3 {
 
 .card-footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: center;
   padding-top: 15px;
   border-top: 1px solid #eee;
 }
@@ -199,7 +215,7 @@ h3 {
 .price {
   font-weight: 700;
   color: #2e7d32;
-  font-size: 1.1rem;
+  font-size: 2rem;
 }
 
 .ask-button {
