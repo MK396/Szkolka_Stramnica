@@ -39,7 +39,7 @@
   .oferta-text {
     max-width: 1000px;
     margin: 0 auto 40px auto; /* KLUCZ: Centrowanie bloku na stronie */
-    text-align: center;       /* Centrowanie tekstu wewnątrz */
+    text-align: left;       /* Centrowanie tekstu wewnątrz */
   }
 
   .oferta-text p {

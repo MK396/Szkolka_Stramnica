@@ -33,7 +33,9 @@
 		flex-wrap: wrap;
 	}
 	.opis-text {
-		max-width: 600px;
+		flex: 1;
+		min-width: 500px;
+		max-width: 1000px;
 		text-align: left;
 	}
 	.opis-text p {

@@ -42,7 +42,7 @@
               <div class="info-text">
                 <span class="info-label">Kontakt</span>
                 <a href="tel:+48728969006" class="phone-link">+48 728 969 006</a>
-                <a href="#oferta" class="contact-form">Formularz kontaktowy</a>
+                <a href="/kontakt" class="contact-form">Formularz kontaktowy</a>
               </div>
             </div>
 
@@ -56,10 +56,12 @@
 
         <nav class="bottom-nav">
           <ul class="menu">
-            <li><a href="#" class="active">Start</a></li>
-            <li><a href="#o-nas">O nas</a></li>
-            <li><a href="#oferta">Oferta</a></li>
-            <li><a href="#kontakt">Kontakt</a></li>
+            <li><router-link to="/" active-class="active">Start</router-link></li>
+            <li><a href="/#opis">O nas</a></li>
+            <li><a href="/#oferta">Oferta</a></li>
+            <li><a href="/#galeria">Galeria</a></li>
+            <li><router-link to="/katalog" active-class="active">Katalog</router-link></li>
+            <li><router-link to="/kontakt" active-class="active">Kontakt</router-link></li>
           </ul>
         </nav>
         
