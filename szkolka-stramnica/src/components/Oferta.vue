@@ -1,25 +1,30 @@
 <template>
-  <section class="oferta-container">
+  <section class="oferta-container" id="oferta">
     <h2>Nasza Oferta</h2>
-    <div class="oferta-text">
-      <p>Szkółka Stramnica to rodzinna firma, gdzie z pasją zajmujemy się uprawą i sprzedażą roślin. Naszym celem jest dostarczenie klientom zdrowych, pięknych i trwałych roślin, które będą stanowić ozdobę każdego ogrodu.</p>
-      <p>W ofercie naszej szkółki roślin znajdziesz szeroki wybór roślin, zarówno tych popularnych, jak i rzadziej spotykanych. Dbamy o to, aby nieustannie poszerzać nasz asortyment o nowe gatunki i odmiany, które zaspokoją nawet najbardziej wymagające gusta. Wszystkie nasze rośliny są starannie wyselekcjonowane i uprawiane zgodnie z najwyższymi standardami.</p>
-    </div>
-    <div class="rosliny-grid">
-      <div class="karta">
-        <span class="ikona">🌲</span>
-        <h3>Iglaki</h3>
-        <p>Szeroki wybór tui i świerków.</p>
+    <div class="oferta-text-grid">
+      <div class="oferta-text">
+        <p>Oferujemy szeroki wybór <strong>roślin ozdobnych</strong>, które doskonale sprawdzą się w każdym ogrodzie. Nasza oferta obejmuje krzewy, drzewa oraz byliny, które dodadzą uroku każdej przestrzeni. Wszystkie nasze rośliny są zdrowe, dobrze rozwinięte i gotowe do posadzenia. Dzięki wieloletniemu doświadczeniu w branży służymy fachową radą, w wyborze odpowiednich gatunków do każdego rodzaju ogrodu. Nieustannie poszerzamy naszą ofertę roślin ogrodowych, aby sprostać oczekiwaniom nawet najbardziej wymagających klientów. Znajdziesz u nas między innymi:</p>
       </div>
-      <div class="karta">
-        <span class="ikona">🌸</span>
-        <h3>Kwiaty</h3>
-        <p>Byliny i rośliny ozdobne.</p>
-      </div>
-      <div class="karta">
-        <span class="ikona">🌳</span>
-        <h3>Drzewa</h3>
-        <p>Drzewa owocowe i alejowe.</p>
+
+      <div class="rosliny-grid-wrapper">
+        <div class="rosliny-grid">
+          <router-link class="karta" to="/katalog">
+            <span class="ikona">🌳</span>
+            <h3>Drzewa</h3>
+          </router-link>
+          <router-link class="karta" to="/katalog">
+            <span class="ikona">🪴</span>
+            <h3>Krzewy</h3>
+          </router-link>
+          <router-link class="karta" to="/katalog">
+            <span class="ikona">🌸</span>
+            <h3>Byliny</h3>
+          </router-link>
+          <router-link class="karta" to="/katalog">
+            <span class="ikona">🌱</span>
+            <h3>Pnącza</h3>
+          </router-link>
+        </div>
       </div>
     </div>
   </section>
@@ -28,18 +33,30 @@
 <style scoped>
   .oferta-container {
     padding: 50px 20px;
-    text-align: center; /* To centruje h2 i inline-blocki */
+    text-align: center;
   }
 
   h2 {
     color: #2e7d32;
+    font-size: 2rem;
     margin-bottom: 30px;
   }
 
+  /* Ten kontener działa identycznie jak opis-text-img */
+  .oferta-text-grid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px; /* Identyczny odstęp jak w O nas */
+    flex-wrap: wrap;
+  }
+
   .oferta-text {
-    max-width: 1000px;
-    margin: 0 auto 40px auto; /* KLUCZ: Centrowanie bloku na stronie */
-    text-align: left;       /* Centrowanie tekstu wewnątrz */
+    flex: 1;
+    font-size: 1.1rem;
+    min-width: 500px; /* Identyczna szerokość minimalna */
+    max-width: 850px; /* Identyczna szerokość maksymalna */
+    text-align: left;
   }
 
   .oferta-text p {
@@ -47,26 +64,57 @@
     line-height: 1.8;
   }
 
+  /* Prawa strona zajmuje tyle samo miejsca co zdjęcie (max 500px) */
+  .rosliny-grid-wrapper {
+    flex: 1;
+    max-width: 650px;
+    width: 100%;
+  }
+
   .rosliny-grid {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 kolumny kart */
+    gap: 15px;
   }
 
   .karta {
     background: white;
     border: 1px solid #e0e0e0;
-    padding: 20px;
+    padding: 20px 10px;
     border-radius: 10px;
-    width: 250px;
-    transition: transform 0.3s;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+
   .karta:hover {
     transform: translateY(-5px);
     border-color: #2e7d32;
+    box-shadow: 0 6px 20px rgba(46, 125, 50, 0.1);
   }
+
   .ikona {
-    font-size: 3rem;
+    font-size: 2.5rem;
+    margin-bottom: 5px;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+    margin: 0;
+    color: #2e7d32;
+  }
+
+  /* Responsywność dla mniejszych ekranów */
+  @media (max-width: 1100px) {
+    .oferta-text {
+      min-width: 100%; /* Na tabletach tekst zajmie całą szerokość */
+    }
+    .rosliny-grid-wrapper {
+      max-width: 100%; /* Karty zajmą całą szerokość pod tekstem */
+    }
   }
 </style>

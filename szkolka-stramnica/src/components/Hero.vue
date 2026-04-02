@@ -1,11 +1,9 @@
 <template>
-  <div class="hero-container">
+  <div class="hero-container" id="home">
     <swiper
       :modules="modules"
-      :effect="fade"
-      fadeEffect="{
-        crossFade: true
-      }"
+      effect="fade"
+      :fade-effect="{ crossFade: true }"
       :slides-per-view="1"
       :pagination="{ clickable: true }"
       :navigation="true"
@@ -15,15 +13,30 @@
     >
       <swiper-slide v-for="(slide, index) in slides" :key="index">
         <div class="slide-wrapper">
-          <div 
+          <div v-if="!slide.isGrid"
             class="bg-image" 
-            :style="{ backgroundImage: `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${slide.image})` }"
+            :style="{ backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${slide.image})` }"
           ></div>
+
+          <div v-else class="bg-grid">
+            <div v-for="(img, i) in slide.images" :key="i" 
+                class="grid-item" 
+                :style="{ backgroundImage: `url(${img})` }">
+            </div>
+            <div class="grid-overlay"></div> 
+          </div>
           
           <div class="text-overlay">
             <h1>{{ slide.title }}</h1>
             <p>{{ slide.description }}</p>
-            <button class="btn-cta">Zobacz ofertę</button>
+            <a 
+              v-if="slide.btnText" 
+              href="#" 
+              @click.prevent="handleNavigation(slide.btnLink)"
+              class="btn-cta"
+            >
+              {{ slide.btnText }}
+            </a>
           </div>
         </div>
       </swiper-slide>
@@ -32,6 +45,7 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Pagination, Navigation, Autoplay, EffectFade } from 'swiper/modules';
 
@@ -40,19 +54,51 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
 
-// Pamiętaj o dodaniu EffectFade do tablicy modules!
+// --- IMPORTY ZDJĘĆ (Sprawdź czy masz photo1.jpg aż do photo10.jpg!) ---
+import photo1 from '../assets/photos_gallery/photo1.jpg';
+import photo2 from '../assets/photos_gallery/photo2.jpg';
+import grid1 from '../assets/photos_gallery/photo3.jpg';
+import grid2 from '../assets/photos_gallery/photo4.jpg';
+import grid3 from '../assets/photos_gallery/photo5.jpg';
+import grid4 from '../assets/photos_gallery/photo6.jpg';
+import grid5 from '../assets/photos_gallery/photo7.jpg';
+import grid6 from '../assets/photos_gallery/photo8.jpg';
+import grid7 from '../assets/photos_gallery/photo9.jpg';
+import grid8 from '../assets/photos_gallery/photo10.jpg';
+import grid9 from '../assets/photos_gallery/photo1.jpg'; // Możesz użyć ponownie photo1
+import grid10 from '../assets/photos_gallery/photo2.jpg'; // Możesz użyć ponownie photo2
+
+const router = useRouter();
 const modules = [Pagination, Navigation, Autoplay, EffectFade];
+
+const handleNavigation = (link) => {
+  if (!link) return;
+  if (link.startsWith('/')) {
+    router.push(link);
+  } else if (link.startsWith('#')) {
+    const el = document.querySelector(link);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }
+};
 
 const slides = [
   {
-    image: 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=1600',
+    image: photo1,
     title: 'Witaj w Szkółce Stramnica',
-    description: 'Najpiękniejsze rośliny do Twojego ogrodu.'
+    description: 'Najpiękniejsze rośliny do Twojego ogrodu.',
   },
   {
-    image: 'https://images.unsplash.com/photo-1416870213410-66fc33c26d8d?q=80&w=1600',
-    title: 'Szeroki wybór iglaków',
-    description: 'Sadzonki najwyższej jakości z własnej uprawy.'
+    image: photo2,
+    title: 'Szeroki wybór roślin',
+    description: 'Oferujemy krzewy, drzewa i byliny najwyższej jakości.',
+  },
+  {
+    isGrid: true, 
+    images: [grid1, grid2, grid3, grid4, grid5, grid6, grid7, grid8, grid9, grid10],
+    title: 'Nasza Galeria',
+    description: 'Zobacz nasze rośliny',
+    btnText: 'Zobacz galerię',
+    btnLink: '#galeria'
   }
 ];
 </script>
@@ -60,91 +106,85 @@ const slides = [
 <style scoped>
 .hero-container {
   width: 100%;
-  height: 40vh;
-  overflow: hidden;
-}
-
-.hero-swiper {
-  width: 100%;
-  height: 100%;
-}
-
-.slide-wrapper {
+  height: 70vh;
+  min-height: 450px;
   position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden; /* Ważne, żeby powiększone zdjęcie nie wystawało */
+  overflow: hidden;
+  background-color: #1a1a1a;
 }
 
-/* --- STYL TŁA --- */
-.bg-image {
+.hero-swiper { width: 100%; height: 100%; }
+.slide-wrapper { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+
+.bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; }
+
+/* RESPONSIVE GRID */
+/* --- STYLE DLA SIATKI (STAŁY UKŁAD, ZMNIEJSZAJĄCE SIĘ ELEMENTY) --- */
+.bg-grid {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  display: grid;
+  /* Zawsze 5 kolumn - każda zajmuje 20% szerokości */
+  grid-template-columns: repeat(5, 1fr); 
+  /* Zawsze 2 rzędy - każdy zajmuje 50% wysokości */
+  grid-template-rows: repeat(2, 1fr);
+  z-index: 1;
+}
+
+.grid-item {
+  width: 100%;
+  height: 100%;
   background-size: cover;
   background-position: center;
-  z-index: 1; /* Pod tekstem */
-  will-change: transform;
+  border: 0.1px solid rgba(255,255,255,0.05); /* Bardzo cienka linia podziału */
 }
 
-/* --- STYL TEKSTU --- */
-.text-overlay {
-  position: relative;
-  z-index: 2; /* Nad zdjęciem */
-  color: white;
-  text-align: center;
-  pointer-events: none; /* Pozwala klikać w nawigację swipera przez tekst jeśli trzeba */
-}
+.grid-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); }
 
-.text-overlay button {
-  pointer-events: auto; /* Przywraca klikalność przycisku */
-}
+.text-overlay { position: relative; z-index: 10; color: white; text-align: center; padding: 0 20px; pointer-events: none; }
+.text-overlay h1, .text-overlay p, .btn-cta { pointer-events: auto; }
 
-/* --- ANIMACJA TYLKO DLA TŁA --- */
-@keyframes kenburns {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.15); }
-}
-
-/* Animacja uruchamia się tylko na bg-image wewnątrz aktywnego slajdu */
-:deep(.swiper-slide-active) .bg-image {
-  animation: kenburns 5s linear forwards;
-}
-
-/* --- RESZTA STYLI --- */
-.text-overlay h1 {
-  font-size: 3.5rem;
-  margin-bottom: 1rem;
-  text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-}
-
-.text-overlay p {
-  font-size: 1.5rem;
-  margin-bottom: 2rem;
-}
+.text-overlay h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin-bottom: 1rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+.text-overlay p { font-size: clamp(1rem, 2vw, 1.25rem); margin-bottom: 2rem; }
 
 .btn-cta {
-  padding: 15px 30px;
-  font-size: 1.2rem;
+  display: inline-block;
+  padding: 12px 30px;
   background-color: #2e7d32;
   color: white;
-  border: none;
+  text-decoration: none;
   border-radius: 5px;
-  cursor: pointer;
+  font-weight: 600;
   transition: 0.3s;
 }
 
-.btn-cta:hover {
-  background-color: #1b5e20;
+@media (max-width: 1024px) {
+  .bg-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .text-overlay h1 { font-size: 2rem; }
-  .text-overlay p { font-size: 1rem; }
+  .hero-container { height: 60vh; }
+  .bg-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(5, 1fr); }
+}
+
+/* Animacja tylko dla Desktop */
+@media (min-width: 1025px) {
+  @keyframes kenburns { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+  :deep(.swiper-slide-active) .bg-image { animation: kenburns 8s linear forwards; }
+}
+
+@media (max-width: 600px) {
+  .bg-grid {
+    /* Na telefonach zmień na 2 kolumny i 5 rzędów - zdjęcia wciąż będą małe, ale czytelne */
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+  }
+  
+  .hero-container {
+    height: 50vh; /* Możesz nieco zmniejszyć wysokość hero na mobile */
+  }
 }
 </style>

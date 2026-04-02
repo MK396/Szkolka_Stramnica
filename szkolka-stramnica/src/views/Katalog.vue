@@ -207,7 +207,7 @@ h3 {
 .card-footer {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
   padding-top: 15px;
   border-top: 1px solid #eee;
 }
@@ -234,9 +234,29 @@ h3 {
   color: white;
 }
 
-@media (max-width: 600px) {
+/* RESPONSYWNOŚĆ */
+@media (max-width: 768px) {
   .product-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr); /* 2 karty obok siebie */
+    gap: 15px;
+  }
+  .image-container {
+    height: 160px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Opcjonalnie: jeśli chcesz 3 karty na bardzo małych ekranach, 
+     ale 2 są zazwyczaj czytelniejsze. Dla 3 kart użyj repeat(3, 1fr) */
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr); 
+    gap: 10px;
+  }
+  .price {
+    font-size: 1.1rem;
+  }
+  .product-info {
+    padding: 10px;
   }
 }
 </style>

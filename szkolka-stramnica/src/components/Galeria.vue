@@ -61,13 +61,14 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown));
 	}
 	h2 {
 		color: #2e7d32;
+        font-size: 2rem;
 		margin-bottom: 30px;
 	}
 
     /* Siatka zdjęć */
     .galeria-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 20px;
         padding: 10px;
     }
@@ -155,20 +156,42 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown));
     .fade-enter-from, .fade-leave-to { opacity: 0; }
 
     /* Responsywność */
-    @media (max-width: 600px) {
-        .galeria-grid {
-            grid-template-columns: 1fr; /* Na telefonach jedno zdjęcie pod drugim */
-        }
-        .foto-item { height: 250px; }
+@media (max-width: 600px) {
+    .galeria-grid {
+        /* Zmieniono z 1fr na 3 kolumny obok siebie */
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 5px; /* Mniejszy odstęp między zdjęciami na mobile */
+        padding: 5px;
+    }
+    
+    .foto-item { 
+        /* Zmniejszona wysokość, aby zdjęcia były bardziej kwadratowe przy 3 kolumnach */
+        height: 110px; 
+        border-radius: 5px; /* Mniejszy zaokrąglony róg lepiej wygląda przy małych fotkach */
     }
 
-        /* Ukrycie strzałek na małych ekranach, jeśli zasłaniają zdjęcie lub zmiana ich rozmiaru */
-    @media (max-width: 600px) {
-        .nav-btn {
-            padding: 10px 5px;
-            font-size: 1.5rem;
-        }
-        .prev { left: 5px; }
-        .next { right: 5px; }
+    /* Opcjonalnie: mniejszy tytuł na mobile */
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
     }
+}
+
+/* Ukrycie strzałek na małych ekranach lub zmiana ich rozmiaru */
+@media (max-width: 600px) {
+    .nav-btn {
+        padding: 10px 5px;
+        font-size: 1.5rem;
+        /* Półprzezroczyste tło, żeby nie zasłaniały małego ekranu */
+        background: rgba(0, 0, 0, 0.3); 
+    }
+    .prev { left: 5px; }
+    .next { right: 5px; }
+    
+    .close-btn {
+        top: 15px;
+        right: 15px;
+        font-size: 2rem;
+    }
+}
 </style>
