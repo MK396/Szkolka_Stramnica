@@ -54,7 +54,6 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import 'swiper/css/effect-fade';
 
-// --- IMPORTY ZDJĘĆ (Sprawdź czy masz photo1.jpg aż do photo10.jpg!) ---
 import photo1 from '../assets/photos_gallery/photo1.jpg';
 import photo2 from '../assets/photos_gallery/photo2.jpg';
 import grid1 from '../assets/photos_gallery/photo3.jpg';
@@ -65,8 +64,8 @@ import grid5 from '../assets/photos_gallery/photo7.jpg';
 import grid6 from '../assets/photos_gallery/photo8.jpg';
 import grid7 from '../assets/photos_gallery/photo9.jpg';
 import grid8 from '../assets/photos_gallery/photo10.jpg';
-import grid9 from '../assets/photos_gallery/photo1.jpg'; // Możesz użyć ponownie photo1
-import grid10 from '../assets/photos_gallery/photo2.jpg'; // Możesz użyć ponownie photo2
+import grid9 from '../assets/photos_gallery/photo1.jpg';
+import grid10 from '../assets/photos_gallery/photo2.jpg';
 
 const router = useRouter();
 const modules = [Pagination, Navigation, Autoplay, EffectFade];
@@ -118,8 +117,6 @@ const slides = [
 
 .bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; }
 
-/* RESPONSIVE GRID */
-/* --- STYLE DLA SIATKI (STAŁY UKŁAD, ZMNIEJSZAJĄCE SIĘ ELEMENTY) --- */
 .bg-grid {
   position: absolute;
   top: 0;
@@ -127,9 +124,7 @@ const slides = [
   width: 100%;
   height: 100%;
   display: grid;
-  /* Zawsze 5 kolumn - każda zajmuje 20% szerokości */
   grid-template-columns: repeat(5, 1fr); 
-  /* Zawsze 2 rzędy - każdy zajmuje 50% wysokości */
   grid-template-rows: repeat(2, 1fr);
   z-index: 1;
 }
@@ -139,7 +134,7 @@ const slides = [
   height: 100%;
   background-size: cover;
   background-position: center;
-  border: 0.1px solid rgba(255,255,255,0.05); /* Bardzo cienka linia podziału */
+  border: 0.1px solid rgba(255,255,255,0.05);
 }
 
 .grid-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); }
@@ -170,7 +165,6 @@ const slides = [
   .bg-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(5, 1fr); }
 }
 
-/* Animacja tylko dla Desktop */
 @media (min-width: 1025px) {
   @keyframes kenburns { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
   :deep(.swiper-slide-active) .bg-image { animation: kenburns 8s linear forwards; }
@@ -178,13 +172,12 @@ const slides = [
 
 @media (max-width: 600px) {
   .bg-grid {
-    /* Na telefonach zmień na 2 kolumny i 5 rzędów - zdjęcia wciąż będą małe, ale czytelne */
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(5, 1fr);
   }
   
   .hero-container {
-    height: 50vh; /* Możesz nieco zmniejszyć wysokość hero na mobile */
+    height: 50vh;
   }
 }
 </style>

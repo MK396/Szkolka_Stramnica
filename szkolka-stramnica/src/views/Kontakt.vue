@@ -208,7 +208,6 @@ h1 { color: #2e7d32; font-size: 2.5rem; margin-bottom: 10px; }
 .info-column { flex: 1; }
 .form-column { flex: 1.2; }
 
-/* INFO STYLE */
 .intro-text { color: #666; line-height: 1.6; margin-bottom: 30px; text-align: left; }
 
 .preference-box {
@@ -232,7 +231,6 @@ h1 { color: #2e7d32; font-size: 2.5rem; margin-bottom: 10px; }
 .method-text span, .method-text a { font-size: 1.1rem; color: #444; text-decoration: none; }
 .highlight-link { font-weight: 700; color: black !important; }
 
-/* FORM STYLE */
 .form-wrapper {
   background: white;
   padding: 40px;
@@ -273,13 +271,11 @@ input:focus, textarea:focus {
 
 .submit-btn:hover:not(:disabled) { background-color: #1b5e20; transform: translateY(-2px); }
 
-/* SUCCESS MESSAGE */
 .success-message { text-align: center; padding: 20px 0; }
 .success-icon { font-size: 4.5rem; margin-bottom: 20px; }
 .back-btn { margin-top: 25px; background: transparent; border: 2px solid #2e7d32; color: #2e7d32; padding: 10px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
 .back-btn:hover { background-color: #2e7d32; color: white; }
 
-/* H2 (Dane kontaktowe) */
 h2 { 
   color: #333; 
   font-size: 1.8rem; 
@@ -287,7 +283,6 @@ h2 {
   text-align: left; 
 }
 
-/* RESPONSYWNOŚĆ */
 @media (max-width: 968px) {
   .contact-grid {
     display: flex;

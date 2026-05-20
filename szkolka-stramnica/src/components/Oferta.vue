@@ -42,20 +42,19 @@
     margin-bottom: 30px;
   }
 
-  /* Ten kontener działa identycznie jak opis-text-img */
   .oferta-text-grid {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 40px; /* Identyczny odstęp jak w O nas */
+    gap: 40px;
     flex-wrap: wrap;
   }
 
   .oferta-text {
     flex: 1;
     font-size: 1.1rem;
-    min-width: 500px; /* Identyczna szerokość minimalna */
-    max-width: 850px; /* Identyczna szerokość maksymalna */
+    min-width: 500px;
+    max-width: 850px;
     text-align: left;
   }
 
@@ -63,8 +62,6 @@
     margin-bottom: 20px;
     line-height: 1.8;
   }
-
-  /* Prawa strona zajmuje tyle samo miejsca co zdjęcie (max 500px) */
   .rosliny-grid-wrapper {
     flex: 1;
     max-width: 650px;
@@ -73,7 +70,7 @@
 
   .rosliny-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 2 kolumny kart */
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
 
@@ -108,13 +105,12 @@
     color: #2e7d32;
   }
 
-  /* Responsywność dla mniejszych ekranów */
   @media (max-width: 1100px) {
     .oferta-text {
-      min-width: 100%; /* Na tabletach tekst zajmie całą szerokość */
+      min-width: 100%;
     }
     .rosliny-grid-wrapper {
-      max-width: 100%; /* Karty zajmą całą szerokość pod tekstem */
+      max-width: 100%;
     }
   }
 </style>

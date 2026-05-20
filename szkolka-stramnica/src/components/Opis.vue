@@ -18,28 +18,28 @@
 <style scoped>
     .opis-container {
         padding: 60px 20px;
-        max-width: 1400px; /* Centrowanie całej sekcji na bardzo szerokich ekranach */
+        max-width: 1400px;
         margin: 0 auto;
         text-align: center;
     }
 
     h2 {
         color: #2e7d32;
-        font-size: clamp(1.5rem, 4vw, 2.2rem); /* Dynamiczna wielkość czcionki */
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
         margin-bottom: 40px;
         font-weight: 700;
     }
 
     .opis-text-img {
         display: flex;
-        align-items: flex-start; /* Zmienione na start, by tekst nie "pływał" przy różnej ilości treści */
+        align-items: flex-start;
         justify-content: center;
         gap: 40px;
         flex-wrap: wrap;
     }
 
     .opis-text {
-        flex: 1 1 500px; /* Rośnij, kurcz się, baza to 500px */
+        flex: 1 1 500px;
         font-size: 1.1rem;
         max-width: 850px;
         text-align: left;
@@ -52,7 +52,7 @@
     }
 
     .opis-img {
-        flex: 1 1 400px; /* Obrazek też może być elastyczny */
+        flex: 1 1 400px;
         max-width: 650px;
         width: 100%;
     }
@@ -65,25 +65,22 @@
         display: block;
     }
 
-    /* --- MEDIA QUERIES --- */
 
-    /* Dla mniejszych tabletów i dużych telefonów */
     @media (max-width: 768px) {
         .opis-container {
             padding: 40px 15px;
         }
 
         .opis-text {
-            min-width: 100%; /* Na tablecie tekst zajmuje pełną szerokość */
+            min-width: 100%;
             font-size: 1.05rem;
         }
 
         .opis-img {
-            max-width: 100%; /* Obrazek na pełną szerokość pod tekstem */
+            max-width: 100%;
         }
     }
 
-    /* Dla bardzo małych telefonów */
     @media (max-width: 480px) {
         h2 {
             margin-bottom: 25px;

@@ -26,14 +26,12 @@ import { onMounted, onUnmounted } from 'vue';
 
 const indexOtwarty = ref(null);
 
-// To pobierze wszystkie pliki .jpg i .png z folderu galeria
 const pliki = import.meta.glob('../assets/photos_gallery/*.{jpg,png,jpeg}', { eager: true, import: 'default' });
 
-// Przekształcamy to w tablicę, którą rozumie Twój kod
 const zdjecia = ref(Object.values(pliki).map(path => ({ url: path })));
 
 const nastepne = (event) => {
-    event.stopPropagation(); // Zapobiega zamknięciu lightboxa przy kliknięciu w przycisk
+    event.stopPropagation();
     indexOtwarty.value = (indexOtwarty.value + 1) % zdjecia.value.length;
 };
 
@@ -65,7 +63,6 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown));
 		margin-bottom: 30px;
 	}
 
-    /* Siatka zdjęć */
     .galeria-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -89,12 +86,10 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown));
         transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* Efekty Hover */
     .foto-item:hover img {
         transform: scale(1.1);
     }
 
-    /* Lightbox (powiększenie) */
     .lightbox {
         position: fixed;
         inset: 0;
@@ -151,38 +146,31 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown));
         right: 20px;
     }
 
-    /* Animacja pojawiania się Lightboxa */
     .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
     .fade-enter-from, .fade-leave-to { opacity: 0; }
 
-    /* Responsywność */
 @media (max-width: 600px) {
     .galeria-grid {
-        /* Zmieniono z 1fr na 3 kolumny obok siebie */
         grid-template-columns: repeat(3, 1fr); 
-        gap: 5px; /* Mniejszy odstęp między zdjęciami na mobile */
+        gap: 5px;
         padding: 5px;
     }
     
     .foto-item { 
-        /* Zmniejszona wysokość, aby zdjęcia były bardziej kwadratowe przy 3 kolumnach */
         height: 110px; 
-        border-radius: 5px; /* Mniejszy zaokrąglony róg lepiej wygląda przy małych fotkach */
+        border-radius: 5px;
     }
 
-    /* Opcjonalnie: mniejszy tytuł na mobile */
     h2 {
         font-size: 1.5rem;
         margin-bottom: 20px;
     }
 }
 
-/* Ukrycie strzałek na małych ekranach lub zmiana ich rozmiaru */
 @media (max-width: 600px) {
     .nav-btn {
         padding: 10px 5px;
         font-size: 1.5rem;
-        /* Półprzezroczyste tło, żeby nie zasłaniały małego ekranu */
         background: rgba(0, 0, 0, 0.3); 
     }
     .prev { left: 5px; }

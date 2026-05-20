@@ -30,7 +30,6 @@
 <script setup>
 import { ref } from 'vue';
 
-// Tablica z danymi o roślinach
 const rosliny = ref([
   { 
     nazwa: 'Świerk', 
@@ -135,14 +134,14 @@ h1 {
   margin-bottom: 50px;
 }
 
-/* Siatka produktów */
+
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 30px;
 }
 
-/* Karta produktu */
+
 .product-card {
   background: white;
   border-radius: 15px;
@@ -158,7 +157,7 @@ h1 {
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
-/* Zdjęcie w karcie */
+
 .image-container {
   position: relative;
   height: 220px;
@@ -182,7 +181,7 @@ h1 {
   font-weight: 600;
 }
 
-/* Info pod zdjęciem */
+
 .product-info {
   padding: 20px;
   flex-grow: 1;
@@ -234,10 +233,9 @@ h3 {
   color: white;
 }
 
-/* RESPONSYWNOŚĆ */
 @media (max-width: 768px) {
   .product-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 karty obok siebie */
+    grid-template-columns: repeat(2, 1fr);
     gap: 15px;
   }
   .image-container {
@@ -246,8 +244,6 @@ h3 {
 }
 
 @media (max-width: 480px) {
-  /* Opcjonalnie: jeśli chcesz 3 karty na bardzo małych ekranach, 
-     ale 2 są zazwyczaj czytelniejsze. Dla 3 kart użyj repeat(3, 1fr) */
   .product-grid {
     grid-template-columns: repeat(2, 1fr); 
     gap: 10px;

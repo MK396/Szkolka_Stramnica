@@ -15,16 +15,13 @@
   </div>
 </template>
 
-<script setup>
-// Kod komponentu
-</script>
 
 <style scoped>
 .error-container {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 70vh; /* Centruje w pionie, zostawiając miejsce na Twój istniejący header/footer */
+  min-height: 70vh;
   padding: 20px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: #f8fafc;
@@ -52,7 +49,7 @@
   font-weight: 800;
   line-height: 1;
   margin: 0;
-  background: linear-gradient(135deg, #2e7d32, #4caf50); /* Zielone gradienty pasujące do szkółki roślin */
+  background: linear-gradient(135deg, #2e7d32, #4caf50);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: -2px;
@@ -77,7 +74,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #2e7d32; /* Kolor zielony pasujący do akcentów na stronie głównej */
+  background-color: #2e7d32;
   color: #ffffff;
   font-weight: 600;
   font-size: 0.95rem;
@@ -106,7 +103,7 @@
   transform: translateX(-3px);
 }
 
-/* Animacje */
+
 @keyframes fadeIn {
   from {
     opacity: 0;

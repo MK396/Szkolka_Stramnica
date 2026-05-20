@@ -61,7 +61,6 @@
 
         <nav :class="['bottom-nav', { 'mobile-open': isMenuOpen }]">
 
-          <!-- Panel informacyjny widoczny tylko w menu mobilnym -->
           <div class="mobile-info-panel">
             <div class="mobile-info-row">
               <span class="mi-icon">📍</span>
@@ -299,7 +298,6 @@
   transform: scale(1.1);
 }
 
-/* ─── DESKTOP MENU ─────────────────────────────────────────────────────── */
 .bottom-nav {
   display: flex;
   justify-content: center;
@@ -336,10 +334,8 @@
   background-color: #2e7d32;
 }
 
-/* ─── MOBILE INFO PANEL – ukryty na desktopie ──────────────────────────── */
 .mobile-info-panel { display: none; }
 
-/* ─── HAMBURGER ────────────────────────────────────────────────────────── */
 .hamburger-btn {
   display: none;
   flex-direction: column;
@@ -375,7 +371,6 @@
 .hamburger-btn.is-active .bar:nth-child(2) { opacity: 0; width: 0; }
 .hamburger-btn.is-active .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 
-/* ─── MOBILE ───────────────────────────────────────────────────────────── */
 @media (max-width: 1000px) {
 
   .nav-content {
@@ -403,7 +398,6 @@
 
   .bottom-nav.mobile-open { display: flex; }
 
-  /* ── Panel informacyjny ── */
   .mobile-info-panel {
     display: flex;
     flex-direction: column;
@@ -474,7 +468,6 @@
   }
   .mi-facebook:hover { background-color: #2d4373; }
 
-  /* ── Lista linków ── */
   .menu {
     flex-direction: column;
     gap: 0;
@@ -521,14 +514,12 @@ const handleScroll = () => {
 
 
 const isSectionActive = (hash) => {
-  // Sekcja jest aktywna TYLKO jeśli jesteśmy na '/' ORAZ observer ją wykrył
   return route.path === '/' && activeSection.value === hash;
 };
 
 let observer = null;
 
 const initObserver = () => {
-  // Jeśli nie jesteśmy na stronie głównej, czyścimy aktywną sekcję i nie odpalamy observera
   if (route.path !== '/') {
     activeSection.value = '';
     return;
@@ -549,7 +540,6 @@ const initObserver = () => {
       });
     },
     {
-      // Sekcja jest "aktywna" gdy zajmuje środkową część ekranu
       rootMargin: '-40% 0px -40% 0px',
       threshold: 0,
     }
@@ -572,7 +562,6 @@ const openInfo = ref('');
 const status = ref('closed');
 let timer = null;
 
-// Wspólna klasa CSS statusu – używana i na desktopie, i w panelu mobilnym
 const statusClass = computed(() => ({
   'status-open':         status.value === 'open',
   'status-closed':       status.value === 'closed',
