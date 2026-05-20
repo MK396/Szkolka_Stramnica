@@ -95,7 +95,7 @@
             <li><a href="/#opis"    :class="{ active: isSectionActive('#opis') }"    @click="isMenuOpen = false">O nas</a></li>
             <li><a href="/#oferta"  :class="{ active: isSectionActive('#oferta') }"  @click="isMenuOpen = false">Oferta</a></li>
             <li><a href="/#galeria" :class="{ active: isSectionActive('#galeria') }" @click="isMenuOpen = false">Galeria</a></li>
-            <li><router-link to="/katalog" active-class="active" @click="isMenuOpen = false">Katalog</router-link></li>
+            <!-- <li><router-link to="/katalog" active-class="active" @click="isMenuOpen = false">Katalog</router-link></li> -->
             <li><router-link to="/kontakt" active-class="active" @click="isMenuOpen = false">Kontakt</router-link></li>
           </ul>
         </nav>

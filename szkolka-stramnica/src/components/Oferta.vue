@@ -3,27 +3,27 @@
     <h2>Nasza Oferta</h2>
     <div class="oferta-text-grid">
       <div class="oferta-text">
-        <p>Oferujemy szeroki wybór <strong>roślin ozdobnych</strong>, które doskonale sprawdzą się w każdym ogrodzie. Nasza oferta obejmuje krzewy, drzewa oraz byliny, które dodadzą uroku każdej przestrzeni. Wszystkie nasze rośliny są zdrowe, dobrze rozwinięte i gotowe do posadzenia. Dzięki wieloletniemu doświadczeniu w branży służymy fachową radą, w wyborze odpowiednich gatunków do każdego rodzaju ogrodu. Nieustannie poszerzamy naszą ofertę roślin ogrodowych, aby sprostać oczekiwaniom nawet najbardziej wymagających klientów. Znajdziesz u nas między innymi:</p>
+        <p>Oferujemy szeroki wybór <strong>roślin ozdobnych</strong>, które doskonale sprawdzą się w każdym ogrodzie. Nasza oferta obejmuje krzewy, drzewa oraz byliny, które dodadzą uroku każdej przestrzeni. Wszystkie nasze rośliny są zdrowe, dobrze rozwinięte i gotowe do posadzenia. Dzięki wieloletniemu doświadczeniu w branży służymy fachową radą, w wyborze odpowiednich gatunków do każdego rodzaju ogrodu. Nieustannie poszerzamy naszą ofertę roślin ogrodowych, aby sprostać okazaniom nawet najbardziej wymagających klientów. Znajdziesz u nas między innymi:</p>
       </div>
 
       <div class="rosliny-grid-wrapper">
         <div class="rosliny-grid">
-          <router-link class="karta" to="/katalog">
+          <div class="karta">
             <span class="ikona">🌳</span>
             <h3>Drzewa</h3>
-          </router-link>
-          <router-link class="karta" to="/katalog">
+          </div>
+          <div class="karta">
             <span class="ikona">🪴</span>
             <h3>Krzewy</h3>
-          </router-link>
-          <router-link class="karta" to="/katalog">
+          </div>
+          <div class="karta">
             <span class="ikona">🌸</span>
             <h3>Byliny</h3>
-          </router-link>
-          <router-link class="karta" to="/katalog">
+          </div>
+          <div class="karta">
             <span class="ikona">🌱</span>
             <h3>Pnącza</h3>
-          </router-link>
+          </div>
         </div>
       </div>
     </div>
