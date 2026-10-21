@@ -9,11 +9,19 @@
                 <p>Szkółkę tworzą wykwalifikowane osoby, które z pasją i zaangażowaniem dzielą się swoją wiedzą i doświadczeniem. Praca ta jest dla nich nie tylko zawodem, ale i największą pasją. </p>
             </div>
             <div class="opis-img">
-                <img src="../assets/photo1.webp" alt="Szkółka Stramnica - O nas" loading="lazy" decoding="async">
+                <picture>
+                    <source media="(max-width: 768px)" :srcset="photoMobile" type="image/webp">
+                    <img :src="photoDesktop" alt="Szkółka Stramnica - O nas" loading="lazy" decoding="async" width="952" height="540">
+                </picture>
             </div>
         </div>
     </section>
 </template>
+
+<script setup>
+import photoDesktop from '../assets/photo1.webp';
+import photoMobile from '../assets/photo1-mobile.webp';
+</script>
 
 <style scoped>
     .opis-container {
@@ -40,9 +48,9 @@
     }
 
     .opis-text {
-        flex: 1 1 0;
+        flex: 1 1 420px;
         font-size: 1.1rem;
-        min-width: 280px;
+        min-width: 0;
         text-align: left;
     }
 
@@ -53,39 +61,58 @@
     }
 
     .opis-img {
-        flex: 1 1 0;
-        min-width: 280px;
+        flex: 1.15 1 480px;
+        min-width: 0;
         width: 100%;
+        max-width: 640px;
     }
 
-    .opis-img img {
+    .opis-img img,
+    .opis-img picture {
         width: 100%;
-        height: auto;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         display: block;
     }
 
+    .opis-img img {
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    /* wcześniej układ pionowy — zdjęcie pełnej szerokości zamiast wąskiej kolumny */
+    @media (max-width: 1100px) {
+        .opis-text-img {
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        .opis-text,
+        .opis-img {
+            flex: 1 1 100%;
+            max-width: 100%;
+        }
+
+        .opis-img {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+    }
 
     @media (max-width: 768px) {
         .opis-container {
             padding: 40px 20px;
         }
 
-        .opis-text,
-        .opis-img {
-            flex: 1 1 100%;
-            min-width: 100%;
+        .opis-text {
             font-size: 1.05rem;
         }
     }
-
 
     @media (max-width: 480px) {
         h2 {
             margin-bottom: 25px;
         }
-        
+
         .opis-text p {
             font-size: 1rem;
             line-height: 1.6;

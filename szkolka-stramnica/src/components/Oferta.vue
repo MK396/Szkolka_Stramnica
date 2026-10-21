@@ -63,7 +63,12 @@
           </div>
           <div class="karta">
             <span class="ikona" aria-hidden="true">
-              <img :src="trawyIcon" alt="" width="52" height="52" />
+              <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" width="52" height="52">
+                <path fill="#2e7d32" d="M18 54c2-14 1-26-2-36 6 8 8 20 7 36h-5z"/>
+                <path fill="#1b5e20" d="M28 54c1-16 6-28 14-38-2 12-4 24-5 38h-9z"/>
+                <path fill="#81c784" d="M36 54c3-12 8-22 16-30-4 10-7 20-8 30h-8z"/>
+                <path fill="#2e7d32" d="M22 54c0-10-4-18-10-26 8 6 12 16 12 26h-2z"/>
+              </svg>
             </span>
             <h3>Trawy</h3>
           </div>
@@ -72,10 +77,6 @@
     </div>
   </section>
 </template>
-
-<script setup>
-import trawyIcon from '../assets/icons/trawy.svg'
-</script>
 
 <style scoped>
   .oferta-container {
