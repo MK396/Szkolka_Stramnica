@@ -10,6 +10,7 @@ Responsywna aplikacja SPA (**Vue 3** + **Vite**) dla gospodarstwa szkółkarskie
 
 - [Opis projektu](#opis-projektu)
 - [Funkcjonalności](#funkcjonalności)
+- [Optymalizacja](#optymalizacja)
 - [Technologie](#technologie)
 - [Hosting](#hosting)
 - [Struktura projektu](#struktura-projektu)
@@ -31,7 +32,7 @@ Czysty frontend bez własnego backendu. Strona pokazuje historię i ofertę szk�
 - **Formularz kontaktowy** — wysyłka wiadomości przez EmailJS (bez własnego API)
 - **Nawigacja SPA** — Vue Router, sticky navbar, menu hamburger na mobile
 - **Responsywny design** — pełne dopasowanie do telefonów, tabletów i desktopów
-- **Integracje zewnętrzne** — Google Maps, Facebook, Font Awesome
+- **Integracje zewnętrzne** — Google Maps, Facebook
 
 | Ścieżka | Opis |
 |---------|------|
@@ -41,12 +42,23 @@ Czysty frontend bez własnego backendu. Strona pokazuje historię i ofertę szk�
 
 ---
 
+## Optymalizacja
+
+Strona jest zoptymalizowana pod szybkie ładowanie i mniejszy transfer:
+
+- **WebP** — zdjęcia galerii i hero w formacie WebP
+- **Miniatury** — w siatce galerii i hero używane są thumbs (`assets/photos_gallery/thumbs/`); pełne zdjęcia ładują się dopiero w lightboxie
+- **Lazy-loading** — atrybut `loading="lazy"` na obrazach poza pierwszym widokiem
+- **Dynamiczny lightbox** — kod podglądu galerii jest dołączany przy otwarciu, a nie przy starcie strony
+
+---
+
 ## Technologie
 
 | Warstwa | Stack |
 |---------|--------|
 | Frontend | Vue 3, Vue Router 4, Vite 8 |
-| UI / media | Swiper, Font Awesome |
+| UI / media | Swiper, WebP, inline SVG |
 | Integracje | EmailJS, Google Maps Embed |
 | Produkcja | Docker (multi-stage), Nginx, Docker Compose |
 
@@ -95,6 +107,9 @@ Szkolka_Stramnica/
         │   ├── Galeria.vue
         │   └── GoogleMap.vue
         └── assets/
+            ├── icons/              # SVG oferty (np. trawy, krzewy)
+            ├── photos_gallery/     # pełne WebP + thumbs/
+            └── photos_catalog/
 ```
 
 </details>
