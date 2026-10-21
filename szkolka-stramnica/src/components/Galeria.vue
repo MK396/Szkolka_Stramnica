@@ -2,8 +2,8 @@
 	<section class="galeria-container" id="galeria">
 		<h2>Galeria</h2>
         <div class="galeria-grid">
-            <div v-for="(foto, index) in zdjecia" :key="index" class="foto-item"@click="indexOtwarty = index">
-                <img :src="foto.url">
+            <div v-for="(foto, index) in zdjecia" :key="index" class="foto-item" @click="indexOtwarty = index">
+                <img v-if="foto.thumb" :src="foto.thumb" loading="lazy" alt="">
                 <div class="foto-overlay">
                 </div>
             </div>
@@ -13,7 +13,7 @@
             <div v-if="indexOtwarty !== null" class="lightbox" @click="indexOtwarty = null">
                 <button class="close-btn">&times;</button>
                 <button class="nav-btn prev" @click.stop="poprzednie">&#10094;</button>
-                <img :src="zdjecia[indexOtwarty].url">
+                <img v-if="lightboxUrl" :src="lightboxUrl" alt="">
                 <button class="nav-btn next" @click.stop="nastepne">&#10095;</button>
             </div>
         </Transition>
@@ -21,14 +21,40 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { onMounted, onUnmounted } from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 
 const indexOtwarty = ref(null);
+const lightboxUrl = ref(null);
 
-const pliki = import.meta.glob('../assets/photos_gallery/*.{jpg,png,jpeg}', { eager: true, import: 'default' });
+const thumbGlob = import.meta.glob('../assets/photos_gallery/thumbs/*.webp', {
+  eager: true,
+  import: 'default',
+});
+const fullGlob = import.meta.glob('../assets/photos_gallery/*.webp', { import: 'default' });
 
-const zdjecia = ref(Object.values(pliki).map(path => ({ url: path })));
+const byName = (a, b) => a.localeCompare(b, undefined, { numeric: true });
+
+const zdjecia = ref(
+  Object.entries(thumbGlob)
+    .sort(([a], [b]) => byName(a, b))
+    .map(([thumbPath, thumb]) => {
+      const name = thumbPath.split('/').pop();
+      const fullKey = Object.keys(fullGlob).find((k) => k.endsWith('/' + name));
+      return {
+        thumb,
+        loadFull: fullKey ? fullGlob[fullKey] : null,
+      };
+    })
+);
+
+watch(indexOtwarty, async (idx) => {
+  lightboxUrl.value = null;
+  if (idx === null) return;
+  const foto = zdjecia.value[idx];
+  if (foto?.loadFull) {
+    lightboxUrl.value = await foto.loadFull();
+  }
+});
 
 const nastepne = (event) => {
     event.stopPropagation();
@@ -77,6 +103,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleKeydown));
         overflow: hidden;
         cursor: pointer;
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        background: #e8e8e8;
     }
 
     .foto-item img {

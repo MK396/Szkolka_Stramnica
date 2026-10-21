@@ -9,7 +9,7 @@
                 <p>Szkółkę tworzą wykwalifikowane osoby, które z pasją i zaangażowaniem dzielą się swoją wiedzą i doświadczeniem. Praca ta jest dla nich nie tylko zawodem, ale i największą pasją. </p>
             </div>
             <div class="opis-img">
-                <img src="../assets/photo1.jpg" alt="Szkółka Stramnica - O nas">
+                <img src="../assets/photo1.webp" alt="Szkółka Stramnica - O nas" loading="lazy" decoding="async">
             </div>
         </div>
     </section>

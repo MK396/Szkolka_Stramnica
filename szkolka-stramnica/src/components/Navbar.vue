@@ -4,7 +4,7 @@
       
       <div class="left-element">
         <router-link to="/" class="logo-link" @click="isMenuOpen = false">
-          <img src="../assets/logo.jpeg" alt="Logo" class="logo-img">
+          <img src="../assets/logo.webp" alt="Logo" class="logo-img" width="110" height="110">
         </router-link>
       </div>
 
@@ -52,8 +52,10 @@
             </div>
 
             <div class="fb-wrapper">
-               <a href="https://www.facebook.com/SzkolkaStramnica" class="social-dot-facebook" target="_blank">
-                  <i class="fa fa-facebook"></i>
+               <a href="https://www.facebook.com/SzkolkaStramnica" class="social-dot-facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                  <svg class="fb-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d="M14 13.5h2.5l.5-3H14V8.75c0-.87.18-1.25 1.3-1.25H17V5h-2.14C12.07 5 11 6.37 11 8.48V10.5H9v3h2V20h3v-6.5z"/>
+                  </svg>
                </a>
             </div>
           </div>
@@ -75,8 +77,11 @@
             </div>
             <div class="mobile-info-row mobile-info-bottom">
               <a href="tel:+48728969006" class="mi-phone">📞 +48 728 969 006</a>
-              <a href="https://www.facebook.com/SzkolkaStramnica" class="mi-facebook" target="_blank">
-                <i class="fa fa-facebook"></i> Facebook
+              <a href="https://www.facebook.com/SzkolkaStramnica" class="mi-facebook" target="_blank" rel="noopener noreferrer">
+                <svg class="fb-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                  <path fill="currentColor" d="M14 13.5h2.5l.5-3H14V8.75c0-.87.18-1.25 1.3-1.25H17V5h-2.14C12.07 5 11 6.37 11 8.48V10.5H9v3h2V20h3v-6.5z"/>
+                </svg>
+                Facebook
               </a>
             </div>
           </div>
@@ -296,6 +301,12 @@
 .social-dot-facebook:hover {
   background-color: #2d4373;
   transform: scale(1.1);
+}
+
+.fb-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .bottom-nav {
