@@ -1,9 +1,9 @@
 <template>
   <Hero />
   <div class="container">
-    <div id="opis"><Opis /></div>
-    <div id="oferta"><Oferta /></div>
-    <div id="galeria"><Galeria /></div>
+    <Opis />
+    <Oferta />
+    <Galeria />
   </div>
   <GoogleMap />
 </template>

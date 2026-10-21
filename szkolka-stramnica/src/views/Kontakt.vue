@@ -15,7 +15,6 @@
             </p>
 
             <div class="preference-box">
-              <span class="leaf-icon">🌿</span>
               <p>
                 Aby zapewnić jak najlepszą obsługę, nasza szkółka preferuje <strong>kontakt telefoniczny</strong>.
               </p>
@@ -26,34 +25,52 @@
             <h2>Dane kontaktowe</h2> 
             
             <div class="method-item">
-              <div class="icon-circle">📞</div>
+              <div class="icon-circle" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h2a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/>
+                </svg>
+              </div>
               <div class="method-text">
                 <strong>Numer telefonu</strong>
-                <a href="tel:+48509954194" class="highlight-link">+48 509 954 194</a>
-                <a href="tel:+48509954102">+48 509 954 102</a>
+                <span class="highlight-link">+48 509 954 194</span>
+                <span>+48 509 954 102</span>
               </div>
             </div>
 
             <div class="method-item">
-              <div class="icon-circle">✉️</div>
+              <div class="icon-circle" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="5" width="18" height="14" rx="2"/>
+                  <path d="m3 7 9 6 9-6"/>
+                </svg>
+              </div>
               <div class="method-text">
                 <strong>E-mail</strong>
-                <a href="mailto:malgosia.bielecka@op.pl">malgosia.bielecka@op.pl</a>
+                <span>malgosia.bielecka@op.pl</span>
               </div>
             </div>
 
             <div class="method-item">
-              <div class="icon-circle">📍</div>
+              <div class="icon-circle" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/>
+                  <circle cx="12" cy="11" r="2.2"/>
+                </svg>
+              </div>
               <div class="method-text">
                 <strong>Adres</strong>
-                <span>Szkółka drzew, krzewów ozdobnych,</span>
-                <span>Krzysztof, Małgorzata Bielecka-Kużownik</span>
+                <span>Szkółka Stramnica</span>
                 <span>Stramnica 36J, 78-100 Kołobrzeg</span>
               </div>
             </div>
 
             <div class="method-item">
-              <div class="icon-circle">⏰</div>
+              <div class="icon-circle" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 7v5l3 2"/>
+                </svg>
+              </div>
               <div class="method-text">
                 <strong>Godziny otwarcia</strong>
                 <span>Pn - Pt: 8:00 - 18:00</span>
@@ -117,7 +134,12 @@
             </form>
 
             <div v-else class="success-message">
-              <div class="success-icon">🌿</div>
+              <div class="success-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 4 17 2 17 2s1 4.5-2 9.5c-.7 1-1.5 1.8-2.5 2.5"/>
+                  <path d="M11 20c0-4 1.5-6.5 4-9"/>
+                </svg>
+              </div>
               <h2>Wiadomość wysłana!</h2>
               <p>Dziękujemy za kontakt. Odpowiemy najszybciej jak to możliwe.</p>
               <button @click="resetForm" class="back-btn">Wyślij kolejną</button>
@@ -225,7 +247,32 @@ h1 { color: #2e7d32; font-size: 2.5rem; margin-bottom: 10px; }
 
 .contact-methods { text-align: left; }
 .method-item { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; }
-.icon-circle { width: 50px; height: 50px; background-color: #e8f5e9; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; color: #2e7d32; }
+.leaf-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #2e7d32;
+}
+.leaf-icon svg {
+  width: 28px;
+  height: 28px;
+}
+.icon-circle {
+  width: 50px;
+  height: 50px;
+  background-color: #e8f5e9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #2e7d32;
+}
+.icon-circle svg {
+  width: 22px;
+  height: 22px;
+}
 .method-text { display: flex; flex-direction: column; }
 .method-text strong { font-size: 0.85rem; text-transform: uppercase; color: #2e7d32; letter-spacing: 0.5px; }
 .method-text span, .method-text a { font-size: 1.1rem; color: #444; text-decoration: none; }
@@ -272,7 +319,17 @@ input:focus, textarea:focus {
 .submit-btn:hover:not(:disabled) { background-color: #1b5e20; transform: translateY(-2px); }
 
 .success-message { text-align: center; padding: 20px 0; }
-.success-icon { font-size: 4.5rem; margin-bottom: 20px; }
+.success-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2e7d32;
+  margin-bottom: 20px;
+}
+.success-icon svg {
+  width: 64px;
+  height: 64px;
+}
 .back-btn { margin-top: 25px; background: transparent; border: 2px solid #2e7d32; color: #2e7d32; padding: 10px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
 .back-btn:hover { background-color: #2e7d32; color: white; }
 

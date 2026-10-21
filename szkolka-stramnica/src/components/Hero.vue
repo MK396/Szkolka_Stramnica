@@ -56,16 +56,15 @@ import 'swiper/css/effect-fade';
 
 import photo1 from '../assets/photos_gallery/photo1.webp';
 import photo2 from '../assets/photos_gallery/photo2.webp';
-import grid1 from '../assets/photos_gallery/thumbs/photo3.webp';
-import grid2 from '../assets/photos_gallery/thumbs/photo4.webp';
-import grid3 from '../assets/photos_gallery/thumbs/photo5.webp';
-import grid4 from '../assets/photos_gallery/thumbs/photo6.webp';
-import grid5 from '../assets/photos_gallery/thumbs/photo7.webp';
-import grid6 from '../assets/photos_gallery/thumbs/photo8.webp';
-import grid7 from '../assets/photos_gallery/thumbs/photo9.webp';
-import grid8 from '../assets/photos_gallery/thumbs/photo10.webp';
-import grid9 from '../assets/photos_gallery/thumbs/photo1.webp';
-import grid10 from '../assets/photos_gallery/thumbs/photo2.webp';
+
+const thumbModules = import.meta.glob('../assets/photos_gallery/thumbs/*.webp', {
+  eager: true,
+  import: 'default',
+});
+
+const gridImages = Object.entries(thumbModules)
+  .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+  .map(([, url]) => url);
 
 const router = useRouter();
 const modules = [Pagination, Navigation, Autoplay, EffectFade];
@@ -92,8 +91,8 @@ const slides = [
     description: 'Oferujemy krzewy, drzewa i byliny najwyższej jakości.',
   },
   {
-    isGrid: true, 
-    images: [grid1, grid2, grid3, grid4, grid5, grid6, grid7, grid8, grid9, grid10],
+    isGrid: true,
+    images: gridImages,
     title: 'Nasza Galeria',
     description: 'Zobacz nasze rośliny',
     btnText: 'Zobacz galerię',
@@ -105,8 +104,9 @@ const slides = [
 <style scoped>
 .hero-container {
   width: 100%;
-  height: 70vh;
-  min-height: 450px;
+  height: 52vh;
+  min-height: 340px;
+  max-height: 560px;
   position: relative;
   overflow: hidden;
   background-color: #1a1a1a;
@@ -124,14 +124,17 @@ const slides = [
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: repeat(5, 1fr); 
+  /* więcej kolumn / mniej wierszy → kafelki bliżej kwadratu */
+  grid-template-columns: repeat(10, 1fr);
   grid-template-rows: repeat(2, 1fr);
+  overflow: hidden;
   z-index: 1;
 }
 
 .grid-item {
   width: 100%;
   height: 100%;
+  min-height: 0;
   background-size: cover;
   background-position: center;
   border: 0.1px solid rgba(255,255,255,0.05);
@@ -156,13 +159,27 @@ const slides = [
   transition: 0.3s;
 }
 
+@media (max-width: 1200px) {
+  .bg-grid {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+}
+
 @media (max-width: 1024px) {
-  .bg-grid { grid-template-columns: repeat(3, 1fr); }
+  .hero-container { height: 48vh; max-height: 480px; }
+  .bg-grid {
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
-  .hero-container { height: 60vh; }
-  .bg-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(5, 1fr); }
+  .hero-container { height: 44vh; min-height: 300px; max-height: 420px; }
+  .bg-grid {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+  }
 }
 
 @media (min-width: 1025px) {
@@ -171,13 +188,17 @@ const slides = [
 }
 
 @media (max-width: 600px) {
+  .hero-container { height: 40vh; min-height: 280px; }
   .bg-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(5, 1fr);
   }
-  
-  .hero-container {
-    height: 50vh;
+}
+
+@media (max-width: 400px) {
+  .bg-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
   }
 }
 </style>

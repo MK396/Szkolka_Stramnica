@@ -18,8 +18,6 @@
 <style scoped>
     .opis-container {
         padding: 60px 20px;
-        max-width: 1400px;
-        margin: 0 auto;
         text-align: center;
     }
 
@@ -32,16 +30,19 @@
 
     .opis-text-img {
         display: flex;
-        align-items: flex-start;
-        justify-content: center;
+        align-items: center;
+        justify-content: stretch;
         gap: 40px;
         flex-wrap: wrap;
+        padding: 10px;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     .opis-text {
-        flex: 1 1 500px;
+        flex: 1 1 0;
         font-size: 1.1rem;
-        max-width: 850px;
+        min-width: 280px;
         text-align: left;
     }
 
@@ -52,8 +53,8 @@
     }
 
     .opis-img {
-        flex: 1 1 400px;
-        max-width: 650px;
+        flex: 1 1 0;
+        min-width: 280px;
         width: 100%;
     }
 
@@ -68,18 +69,17 @@
 
     @media (max-width: 768px) {
         .opis-container {
-            padding: 40px 15px;
+            padding: 40px 20px;
         }
 
-        .opis-text {
+        .opis-text,
+        .opis-img {
+            flex: 1 1 100%;
             min-width: 100%;
             font-size: 1.05rem;
         }
-
-        .opis-img {
-            max-width: 100%;
-        }
     }
+
 
     @media (max-width: 480px) {
         h2 {

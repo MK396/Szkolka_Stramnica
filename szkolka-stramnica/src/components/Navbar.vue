@@ -25,28 +25,42 @@
         <div class="top-info-row">
           <div class="info-group">
             <div class="info-item">
-              <span class="info-icon">📍</span>
-              <div class="info-text">
+              <span class="info-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/>
+                  <circle cx="12" cy="11" r="2.2"/>
+                </svg>
+              </span>
+              <div class="info-copy">
                 <span class="info-label">Adres</span>
                 <span class="info-value">Stramnica 36J, Kołobrzeg</span>
-                <a href="#map" class="map-button">Jak dojechać</a>
+                <a href="#map" class="map-button" @click.prevent="goToSection('#map')">Jak dojechać</a>
               </div>
             </div>
             
             <div class="info-item">
-              <span class="info-icon">⏰</span>
-              <div class="info-text">
+              <span class="info-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 7v5l3 2"/>
+                </svg>
+              </span>
+              <div class="info-copy">
                 <span class="info-label">Godziny otwarcia</span>
                 <span class="info-value">Pn-Pt: 8:00-18:00, Sob: 8:00-14:00</span>
-                <div :class="['open-info', statusClass]">{{ openInfo }}</div>
+                <div v-if="openInfo" :class="['open-info', statusClass]">{{ openInfo }}</div>
               </div>
             </div>
             
             <div class="info-item">
-              <span class="info-icon">📞</span>
-              <div class="info-text">
+              <span class="info-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h2a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/>
+                </svg>
+              </span>
+              <div class="info-copy">
                 <span class="info-label">Kontakt</span>
-                <a href="tel:+48728969006" class="phone-link">+48 728 969 006</a>
+                <span class="info-value">+48 728 969 006</span>
                 <a href="/kontakt" class="contact-form">Formularz kontaktowy</a>
               </div>
             </div>
@@ -54,7 +68,7 @@
             <div class="fb-wrapper">
                <a href="https://www.facebook.com/SzkolkaStramnica" class="social-dot-facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
                   <svg class="fb-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path fill="currentColor" d="M14 13.5h2.5l.5-3H14V8.75c0-.87.18-1.25 1.3-1.25H17V5h-2.14C12.07 5 11 6.37 11 8.48V10.5H9v3h2V20h3v-6.5z"/>
+                    <path fill="currentColor" d="M13.5 21.5v-7h2.6l.4-3h-3V9.3c0-.84.24-1.4 1.47-1.4h1.53V5.12A19.3 19.3 0 0 0 13.86 5C11.2 5 9.5 6.56 9.5 9.18V11.5H7v3h2.5v7h4z"/>
                   </svg>
                </a>
             </div>
@@ -65,21 +79,36 @@
 
           <div class="mobile-info-panel">
             <div class="mobile-info-row">
-              <span class="mi-icon">📍</span>
+              <span class="mi-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/>
+                  <circle cx="12" cy="11" r="2.2"/>
+                </svg>
+              </span>
               <span class="mi-text">Stramnica 36J, 78-100 Kołobrzeg</span>
             </div>
             <div class="mobile-info-row">
-              <span class="mi-icon">⏰</span>
+              <span class="mi-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"/>
+                  <path d="M12 7v5l3 2"/>
+                </svg>
+              </span>
               <div class="mi-text">
                 <span>Pn-Pt: 8:00–18:00 &nbsp;|&nbsp; Sob: 8:00–14:00</span>
-                <span :class="['mobile-status', statusClass]">{{ openInfo }}</span>
+                <span v-if="openInfo" :class="['mobile-status', statusClass]">{{ openInfo }}</span>
               </div>
             </div>
             <div class="mobile-info-row mobile-info-bottom">
-              <a href="tel:+48728969006" class="mi-phone">📞 +48 728 969 006</a>
+              <span class="mi-phone">
+                <svg class="mi-phone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h2a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/>
+                </svg>
+                +48 728 969 006
+              </span>
               <a href="https://www.facebook.com/SzkolkaStramnica" class="mi-facebook" target="_blank" rel="noopener noreferrer">
                 <svg class="fb-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path fill="currentColor" d="M14 13.5h2.5l.5-3H14V8.75c0-.87.18-1.25 1.3-1.25H17V5h-2.14C12.07 5 11 6.37 11 8.48V10.5H9v3h2V20h3v-6.5z"/>
+                  <path fill="currentColor" d="M13.5 21.5v-7h2.6l.4-3h-3V9.3c0-.84.24-1.4 1.47-1.4h1.53V5.12A19.3 19.3 0 0 0 13.86 5C11.2 5 9.5 6.56 9.5 9.18V11.5H7v3h2.5v7h4z"/>
                 </svg>
                 Facebook
               </a>
@@ -88,19 +117,26 @@
 
           <ul class="menu">
             <li>
-              <router-link 
-                to="/" 
-                :class="{ 'active': $route.path === '/' && activeSection === '' }" 
-                @click="isMenuOpen = false; activeSection = ''"
+              <a
+                href="/"
+                :class="{ active: isStartActive }"
+                @click.prevent="goHome"
               >
                 Start
-              </router-link>
+              </a>
             </li>
-            <li><a href="/#opis"    :class="{ active: isSectionActive('#opis') }"    @click="isMenuOpen = false">O nas</a></li>
-            <li><a href="/#oferta"  :class="{ active: isSectionActive('#oferta') }"  @click="isMenuOpen = false">Oferta</a></li>
-            <li><a href="/#galeria" :class="{ active: isSectionActive('#galeria') }" @click="isMenuOpen = false">Galeria</a></li>
-            <!-- <li><router-link to="/katalog" active-class="active" @click="isMenuOpen = false">Katalog</router-link></li> -->
-            <li><router-link to="/kontakt" active-class="active" @click="isMenuOpen = false">Kontakt</router-link></li>
+            <li>
+              <a href="/#opis" :class="{ active: isSectionActive('#opis') }" @click.prevent="goToSection('#opis')">O nas</a>
+            </li>
+            <li>
+              <a href="/#oferta" :class="{ active: isSectionActive('#oferta') }" @click.prevent="goToSection('#oferta')">Oferta</a>
+            </li>
+            <li>
+              <a href="/#galeria" :class="{ active: isSectionActive('#galeria') }" @click.prevent="goToSection('#galeria')">Galeria</a>
+            </li>
+            <li>
+              <router-link to="/kontakt" active-class="active" @click="isMenuOpen = false">Kontakt</router-link>
+            </li>
           </ul>
         </nav>
         
@@ -198,15 +234,28 @@
 
 .info-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 12px;
 }
 
-.info-icon { font-size: 1.2rem; }
+.info-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 2.4em; /* środek między etykietą a wartością */
+  color: #2e7d32;
+}
 
-.info-text {
+.info-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.info-copy {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .info-label {
@@ -217,69 +266,47 @@
   letter-spacing: 0.5px;
 }
 
-.info-value, .phone-link {
+.info-value {
   font-size: 0.85rem;
   color: #666;
-  text-decoration: none;
   line-height: 1.3;
 }
 
-.phone-link {
-  color: #2e7d32;
-  font-weight: 700;
-  transition: color 0.2s;
-}
-.phone-link:hover { color: #1b5e20; }
-
-.map-button {
-  text-decoration: none;
-  display: inline-block;
-  text-align: center;
-  margin-top: 5px;
-  padding: 6px 12px;
-  font-size: 0.75rem;
-  color: #2e7d32;
-  background-color: transparent;
-  border: 1px solid #2e7d32;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-}
-.map-button.active, .map-button:hover {
-  background-color: #2e7d32;
-  color: white;
-}
-
-.contact-form {
-  text-decoration: none;
-  display: inline-block;
-  text-align: center;
-  margin-top: 5px;
-  padding: 6px 12px;
-  font-size: 0.75rem;
-  color: #2e7d32;
-  background-color: transparent;
-  border: 1px solid #2e7d32;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
-}
-.contact-form:hover, .contact-form.active {
-  background-color: #2e7d32;
-  color: white;
-}
-
+.map-button,
+.contact-form,
 .open-info {
   display: inline-block;
   text-align: center;
   margin-top: 5px;
   padding: 6px 12px;
   font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.map-button,
+.contact-form {
+  text-decoration: none;
+  color: #2e7d32;
+  background-color: transparent;
+  border: 1px solid #2e7d32;
+  cursor: pointer;
+}
+
+.map-button.active,
+.map-button:hover,
+.contact-form:hover,
+.contact-form.active {
+  background-color: #2e7d32;
+  color: white;
+}
+
+.open-info {
+  align-self: stretch;
+  box-sizing: border-box;
   background-color: transparent;
   border: 1px solid;
-  border-radius: 4px;
-  font-weight: 600;
-  transition: all 0.3s ease;
 }
 
 .status-open        { color: #2e7d32; border-color: #2e7d32; background-color: rgba(46,125,50,0.05); }
@@ -307,6 +334,8 @@
   width: 18px;
   height: 18px;
   display: block;
+  /* „f” jest asymetryczne — lekkie przesunięcie w lewo = optyczny środek */
+  transform: translateX(-1.5px);
 }
 
 .bottom-nav {
@@ -426,8 +455,16 @@
   }
 
   .mi-icon {
-    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    color: #2e7d32;
+  }
+
+  .mi-icon svg {
+    width: 18px;
+    height: 18px;
   }
 
   .mi-text {
@@ -456,13 +493,20 @@
   }
 
   .mi-phone {
-    font-size: 0.9rem;
-    font-weight: 700;
-    color: #2e7d32;
-    text-decoration: none;
-    transition: color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 400;
+    color: #444;
   }
-  .mi-phone:hover { color: #1b5e20; }
+
+  .mi-phone-icon {
+    width: 16px;
+    height: 16px;
+    color: #2e7d32;
+    flex-shrink: 0;
+  }
 
   .mi-facebook {
     display: flex;
@@ -507,70 +551,108 @@
 </style>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
-import { useRoute } from 'vue-router'; // Dodaj ten import na górze
+import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 
 const isShrunk = ref(false);
 const isMenuOpen = ref(false);
 const activeSection = ref('');
 
-const handleScroll = () => {
-  const offset = window.scrollY;
-  if (offset > 100) isShrunk.value = true;
-  else if (offset < 20) isShrunk.value = false;
+const NAV_OFFSET = 100;
+const SECTION_IDS = ['opis', 'oferta', 'galeria'];
+
+const isStartActive = computed(
+  () => route.path === '/' && activeSection.value === ''
+);
+
+const isSectionActive = (hash) =>
+  route.path === '/' && activeSection.value === hash;
+
+const scrollToHash = (hash) => {
+  const el = document.querySelector(hash);
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
 };
 
-
-
-const isSectionActive = (hash) => {
-  return route.path === '/' && activeSection.value === hash;
+const goHome = async () => {
+  isMenuOpen.value = false;
+  activeSection.value = '';
+  if (route.path !== '/') {
+    await router.push('/');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-let observer = null;
+const goToSection = async (hash) => {
+  isMenuOpen.value = false;
+  activeSection.value = hash;
+  if (route.path !== '/') {
+    await router.push({ path: '/', hash });
+    await nextTick();
+    setTimeout(() => scrollToHash(hash), 80);
+    return;
+  }
+  if (route.hash !== hash) {
+    await router.replace({ hash });
+  }
+  scrollToHash(hash);
+};
 
-const initObserver = () => {
+const updateActiveSection = () => {
   if (route.path !== '/') {
     activeSection.value = '';
     return;
   }
 
-  const sections = ['opis', 'oferta', 'galeria'];
+  if (window.scrollY < 180) {
+    activeSection.value = '';
+    return;
+  }
 
-  const elements = sections.map(id => document.getElementById(id)).filter(Boolean);
-
-  if (!elements.length) return;
-
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          activeSection.value = '#' + entry.target.id;
-        }
-      });
-    },
-    {
-      rootMargin: '-40% 0px -40% 0px',
-      threshold: 0,
-    }
-  );
-
-  elements.forEach(el => observer.observe(el));
+  let current = '';
+  for (const id of SECTION_IDS) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const top = el.getBoundingClientRect().top - NAV_OFFSET;
+    if (top <= 80) current = `#${id}`;
+  }
+  activeSection.value = current;
 };
 
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  setTimeout(initObserver, 300);
-});
+const handleScroll = () => {
+  const offset = window.scrollY;
+  if (offset > 100) isShrunk.value = true;
+  else if (offset < 20) isShrunk.value = false;
+  updateActiveSection();
+};
 
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-  if (observer) observer.disconnect();
-});
+watch(
+  () => route.fullPath,
+  async (toFull, fromFull) => {
+    isMenuOpen.value = false;
+    // Pierwsze załadowanie / odświeżenie — bez skoku do hash
+    if (!fromFull) {
+      activeSection.value = '';
+      return;
+    }
+    await nextTick();
+    if (route.path === '/' && route.hash) {
+      activeSection.value = route.hash;
+      setTimeout(() => scrollToHash(route.hash), 80);
+    } else if (route.path !== '/') {
+      activeSection.value = '';
+    } else {
+      updateActiveSection();
+    }
+  }
+);
 
 const openInfo = ref('');
-const status = ref('closed');
+const status = ref('');
 let timer = null;
 
 const statusClass = computed(() => ({
@@ -583,7 +665,7 @@ const updateOpeningStatus = () => {
   const now = new Date();
   const day = now.getDay();
   const currentTimeInMinutes = now.getHours() * 60 + now.getMinutes();
-  
+
   const dateString = now.toISOString().split('T')[0];
   const monthDay = dateString.slice(5);
 
@@ -591,7 +673,7 @@ const updateOpeningStatus = () => {
   const movableHolidays = ['2026-04-05','2026-04-06','2026-06-04'];
 
   if (holidays.includes(monthDay) || movableHolidays.includes(dateString)) {
-    openInfo.value = "Dziś nieczynne";
+    openInfo.value = 'Dziś nieczynne';
     status.value = 'closed';
     return;
   }
@@ -606,24 +688,31 @@ const updateOpeningStatus = () => {
   else if (day === 6) todayConfig = hoursConfig.saturday;
 
   if (!todayConfig) {
-    openInfo.value = "Dziś nieczynne";
+    openInfo.value = 'Dziś nieczynne';
     status.value = 'closed';
     return;
   }
 
-  const timeUntilOpen  = todayConfig.start - currentTimeInMinutes;
-  const timeUntilClose = todayConfig.end   - currentTimeInMinutes;
+  const timeUntilOpen = todayConfig.start - currentTimeInMinutes;
+  const timeUntilClose = todayConfig.end - currentTimeInMinutes;
 
   if (currentTimeInMinutes < todayConfig.start) {
-    if (timeUntilOpen <= 60) { openInfo.value = `Otwieramy za ${timeUntilOpen} min!`; status.value = 'almost'; }
-    else                     { openInfo.value = "Zamknięte"; status.value = 'closed'; }
+    if (timeUntilOpen <= 60) {
+      openInfo.value = `Otwieramy za ${timeUntilOpen} min!`;
+      status.value = 'almost';
+    } else {
+      openInfo.value = 'Zamknięte';
+      status.value = 'closed';
+    }
   } else if (currentTimeInMinutes >= todayConfig.end) {
-    openInfo.value = "Już zamknięte"; status.value = 'closed';
+    openInfo.value = 'Już zamknięte';
+    status.value = 'closed';
   } else {
     const h = Math.floor(timeUntilClose / 60);
     const m = timeUntilClose % 60;
     if (timeUntilClose <= 60) {
-      openInfo.value = `Zamykamy za ${m} min`; status.value = 'almost';
+      openInfo.value = `Zamykamy za ${m} min`;
+      status.value = 'almost';
     } else {
       openInfo.value = h > 0 ? `Otwarte jeszcze ${h}h ${m}min` : `Otwarte jeszcze ${m}min`;
       status.value = 'open';
@@ -631,6 +720,17 @@ const updateOpeningStatus = () => {
   }
 };
 
-onMounted(() => { updateOpeningStatus(); timer = setInterval(updateOpeningStatus, 60000); });
-onUnmounted(() => clearInterval(timer));
+// Od razu w setup — bez czerwonego flasha przed onMounted
+updateOpeningStatus();
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
+  timer = setInterval(updateOpeningStatus, 60000);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+  clearInterval(timer);
+});
 </script>
