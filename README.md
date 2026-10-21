@@ -1,27 +1,122 @@
-# Aplikacja webowa Szkółka Stramnica
+# Strona internetowa szkółki roślin — Szkółka Stramnica
 
-Nowoczesna, responsywna strona internetowa zrealizowana dla szkółki roślin.
+Responsywna aplikacja SPA (**Vue 3** + **Vite**) dla gospodarstwa szkółkarskiego w Stramnicy koło Kołobrzegu — wizytówka z ofertą, galerią, mapą i kontaktem.
 
----
-
-## 📸 Demo
-
-[Zobacz wersję demonstracyjną](https://szkolka-stramnica.vercel.app/)
+**Aplikacja online:** [https://szkolka-stramnica.mkuzownik.tech/](https://szkolka-stramnica.mkuzownik.tech/)
 
 ---
 
-## 🚀 Funkcjonalności
+## Spis treści
 
-* **Galeria Zdjęć:** Dynamiczny komponent prezentujący rośliny w formie siatki zdjęć.
-* **Nawigacja SPA:** Płynne przechodzenie pomiędzy podstronami bez przeładowywania dokumentu.
-* **Responsywny Design:** Pełne dostosowanie interfejsu użytkownika do ekranów smartfonów, tabletów oraz komputerów stacjonarnych.
-* **Moduł Kontaktowy:** Integracja z interaktywną mapą Google ułatwiającą lokalizację szkółki oraz sekcja informacyjna z danymi kontaktowymi.
+- [Opis projektu](#opis-projektu)
+- [Funkcjonalności](#funkcjonalności)
+- [Technologie](#technologie)
+- [Hosting](#hosting)
+- [Struktura projektu](#struktura-projektu)
+- [Architektura](#architektura)
 
 ---
 
-## 🛠️ Technologie i narzędzia
+## Opis projektu
 
-* **Framework:** Vue 3
-* **Budowanie projektu:** Vite
-* **Routing:** Vue Router
-* **Deployment/Hosting:** Vercel
+Czysty frontend bez własnego backendu. Strona pokazuje historię i ofertę szkółki, galerię zdjęć oraz ułatwia kontakt — telefon, formularz (**EmailJS**) i lokalizacja (**Google Maps Embed**).
+
+---
+
+## Funkcjonalności
+
+- **Strona główna** — Hero (karuzela Swiper), O nas, Oferta, Galeria, mapa Google
+- **Galeria ze lightboxem** — siatka zdjęć; podgląd pełnoekranowy ze strzałkami i Escape
+- **Status otwarcia na żywo** — wskaźnik „otwarte / zamknięte” na podstawie godzin pracy i świąt
+- **Formularz kontaktowy** — wysyłka wiadomości przez EmailJS (bez własnego API)
+- **Nawigacja SPA** — Vue Router, sticky navbar, menu hamburger na mobile
+- **Responsywny design** — pełne dopasowanie do telefonów, tabletów i desktopów
+- **Integracje zewnętrzne** — Google Maps, Facebook, Font Awesome
+
+| Ścieżka | Opis |
+|---------|------|
+| `/` | Strona główna |
+| `/kontakt` | Formularz i dane kontaktowe |
+| `/*` | Strona 404 |
+
+---
+
+## Technologie
+
+| Warstwa | Stack |
+|---------|--------|
+| Frontend | Vue 3, Vue Router 4, Vite 8 |
+| UI / media | Swiper, Font Awesome |
+| Integracje | EmailJS, Google Maps Embed |
+| Produkcja | Docker (multi-stage), Nginx, Docker Compose |
+
+---
+
+## Hosting
+
+Własny serwer **Proxmox**, kontener **Docker** (Nginx + statyczny build SPA), orkiestracja **Docker Compose**.
+
+```
+Internet → Proxmox → Docker (Nginx :80) → dist/
+```
+
+---
+
+## Struktura projektu
+
+<details>
+<summary>Rozwiń pełną strukturę katalogów</summary>
+
+```
+Szkolka_Stramnica/
+├── docker-compose.yml
+├── README.md
+└── szkolka-stramnica/
+    ├── Dockerfile              # Node build → Nginx
+    ├── nginx.conf
+    ├── package.json
+    ├── vite.config.js
+    ├── index.html
+    ├── public/
+    └── src/
+        ├── main.js
+        ├── App.vue             # Navbar + router-view
+        ├── router/index.js
+        ├── views/
+        │   ├── HomeView.vue
+        │   ├── Kontakt.vue
+        │   ├── Katalog.vue     # wyłączony w routerze
+        │   └── NotFound.vue
+        ├── components/
+        │   ├── Navbar.vue
+        │   ├── Hero.vue
+        │   ├── Opis.vue
+        │   ├── Oferta.vue
+        │   ├── Galeria.vue
+        │   └── GoogleMap.vue
+        └── assets/
+```
+
+</details>
+
+---
+
+## Architektura
+
+```
+Przeglądarka
+    │
+    ▼
+Vue 3 SPA (Vue Router)
+    ├── /         → HomeView (Hero, Opis, Oferta, Galeria, GoogleMap)
+    ├── /kontakt  → Kontakt.vue → EmailJS
+    └── /*        → NotFound.vue
+```
+
+| Warstwa | Rola |
+|---------|------|
+| `App.vue` | Layout — navbar + `<router-view>` |
+| `views/` | Strony routera |
+| `components/` | Sekcje UI strony głównej |
+
+**Build Docker:** `node:20-alpine` (Vite) → `nginx:alpine` (`dist/` + `try_files` pod SPA). Klucze EmailJS jako build args `VITE_*`.
