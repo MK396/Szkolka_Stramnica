@@ -1,5 +1,5 @@
 <template>
-  <header :class="['navbar-wrapper', { 'is-shrunk': isShrunk }]">
+  <header :class="['navbar-wrapper', { 'is-shrunk': isShrunk, 'mobile-nav-open': isMenuOpen }]">
     <div class="nav-content">
       
       <div class="left-element">
@@ -12,7 +12,7 @@
         class="hamburger-btn"
         :class="{ 'is-active': isMenuOpen }"
         @click="isMenuOpen = !isMenuOpen"
-        aria-label="Otwórz menu"
+        :aria-label="isMenuOpen ? 'Zamknij menu' : 'Otwórz menu'"
         :aria-expanded="isMenuOpen"
       >
         <span class="bar"></span>
@@ -20,8 +20,32 @@
         <span class="bar"></span>
       </button>
 
+      <div class="mobile-header-info">
+        <a
+          href="#map"
+          class="mhi-chip"
+          title="Stramnica 36J, 78-100 Kołobrzeg"
+          @click.prevent="goToSection('#map')"
+        >
+          <span class="mhi-chip-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 21s-6-5.3-6-10a6 6 0 1 1 12 0c0 4.7-6 10-6 10z"/>
+              <circle cx="12" cy="11" r="2.2"/>
+            </svg>
+          </span>
+          <span class="mhi-chip-label">Stramnica 36J</span>
+        </a>
+        <a href="tel:+48728969006" class="mhi-chip mhi-chip-phone" title="+48 728 969 006">
+          <span class="mhi-chip-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h2a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/>
+            </svg>
+          </span>
+          <span class="mhi-chip-label">728 969 006</span>
+        </a>
+      </div>
+
       <div class="right-element">
-        
         <div class="top-info-row">
           <div class="info-group">
             <div class="info-item">
@@ -100,12 +124,12 @@
               </div>
             </div>
             <div class="mobile-info-row mobile-info-bottom">
-              <span class="mi-phone">
+              <a href="tel:+48728969006" class="mi-phone">
                 <svg class="mi-phone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                   <path d="M22 16.9v2a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h2a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.6a2 2 0 0 1-.5 2.1L7.1 9.5a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.8.3 1.7.5 2.6.6a2 2 0 0 1 1.7 2z"/>
                 </svg>
                 +48 728 969 006
-              </span>
+              </a>
               <a href="https://www.facebook.com/SzkolkaStramnica" class="mi-facebook" target="_blank" rel="noopener noreferrer">
                 <svg class="fb-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                   <path fill="currentColor" d="M13.5 21.5v-7h2.6l.4-3h-3V9.3c0-.84.24-1.4 1.47-1.4h1.53V5.12A19.3 19.3 0 0 0 13.86 5C11.2 5 9.5 6.56 9.5 9.18V11.5H7v3h2.5v7h4z"/>
@@ -139,9 +163,15 @@
             </li>
           </ul>
         </nav>
-        
       </div>
     </div>
+
+    <div
+      v-if="isMenuOpen"
+      class="mobile-nav-backdrop"
+      aria-hidden="true"
+      @click="isMenuOpen = false"
+    ></div>
   </header>
 </template>
 
@@ -374,7 +404,9 @@
   background-color: #2e7d32;
 }
 
+.mobile-header-info { display: none; }
 .mobile-info-panel { display: none; }
+.mobile-nav-backdrop { display: none; }
 
 .hamburger-btn {
   display: none;
@@ -413,30 +445,215 @@
 
 @media (max-width: 1000px) {
 
-  .nav-content {
-    height: 80px !important;
-    padding: 0 20px;
-    align-items: center;
+  .navbar-wrapper {
+    position: sticky;
+    z-index: 1100;
   }
 
-  .logo-img { height: 60px !important; }
+  .navbar-wrapper.mobile-nav-open {
+    z-index: 1100;
+  }
+
+  .navbar-wrapper.is-shrunk .nav-content {
+    height: 72px !important;
+  }
+
+  .navbar-wrapper.is-shrunk .logo-img {
+    height: 50px !important;
+  }
+
+  .nav-content {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: 72px;
+    height: 72px !important;
+    min-height: 72px;
+    max-height: 72px;
+    max-width: none;
+    padding: 0 16px;
+    align-items: center;
+    gap: 6px;
+    overflow: visible;
+    position: relative;
+    z-index: 2;
+    background-color: #ffffff;
+  }
+
+  .navbar-wrapper.mobile-nav-open .nav-content {
+    grid-template-columns: 1fr auto;
+    box-shadow: 0 1px 0 #e8e8e8;
+  }
+
+  .navbar-wrapper.mobile-nav-open .mobile-header-info {
+    display: none;
+  }
+
+  .logo-link {
+    line-height: 0;
+  }
+
+  .logo-img {
+    height: 50px !important;
+    max-height: 50px;
+    width: auto;
+  }
+
   .top-info-row { display: none; }
-  .hamburger-btn { display: flex; }
-  .right-element { gap: 0; }
+
+  .left-element,
+  .mobile-header-info,
+  .hamburger-btn {
+    position: relative;
+    z-index: 2;
+    pointer-events: auto;
+  }
+
+  .left-element {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    left: auto;
+  }
+
+  .mobile-header-info {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    gap: clamp(6px, 2.5vw, 14px);
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .hamburger-btn {
+    display: flex;
+    grid-column: 3;
+    grid-row: 1;
+    position: static;
+    transform: none;
+    justify-self: end;
+    align-self: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+  }
+
+  .hamburger-btn.is-active .bar:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+  }
+
+  .hamburger-btn.is-active .bar:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+  }
+
+  .mhi-chip {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    min-width: 0;
+    max-width: 46%;
+    padding: 0;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mhi-chip:active {
+    background: rgba(46, 125, 50, 0.08);
+  }
+
+  .mhi-chip-static {
+    cursor: default;
+  }
+
+  .mhi-chip-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #2e7d32;
+  }
+
+  .mhi-chip-icon {
+    flex-shrink: 0;
+  }
+
+  .mhi-chip-icon svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mhi-chip-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #444;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mhi-chip-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 1.15;
+    padding: 3px 7px;
+    border-radius: 999px;
+    border: 1px solid;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .right-element {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    pointer-events: none;
+    z-index: 4;
+  }
 
   .bottom-nav {
     display: none;
     flex-direction: column;
-    position: absolute;
-    top: 80px;
-    left: 0;
+    position: relative;
     width: 100%;
     background-color: #ffffff;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    z-index: 999;
+    border-top: 1px solid #e8e8e8;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    pointer-events: auto;
   }
 
   .bottom-nav.mobile-open { display: flex; }
+
+  .mobile-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    top: 72px;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 1;
+  }
+
+  .hamburger-btn {
+    z-index: 5;
+  }
+
+  .hamburger-btn .bar {
+    width: 28px;
+  }
 
   .mobile-info-panel {
     display: flex;
@@ -499,6 +716,7 @@
     font-size: 0.85rem;
     font-weight: 400;
     color: #444;
+    text-decoration: none;
   }
 
   .mi-phone-icon {
@@ -534,9 +752,9 @@
 
   .menu a {
     display: block;
-    padding: 14px 24px;
-    font-size: 1rem;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #eaeaea;
   }
 
   .menu li:last-child a { border-bottom: none; }
@@ -652,6 +870,11 @@ const handleScroll = () => {
   updateActiveSection();
 };
 
+watch(isMenuOpen, (open) => {
+  if (typeof document === 'undefined') return;
+  document.body.style.overflow = open ? 'hidden' : '';
+});
+
 watch(
   () => route.fullPath,
   async (toFull, fromFull) => {
@@ -756,5 +979,6 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
   clearInterval(timer);
   clearTimeout(scrollSpyUnlockTimer);
+  if (typeof document !== 'undefined') document.body.style.overflow = '';
 });
 </script>

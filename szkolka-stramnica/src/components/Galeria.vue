@@ -24,43 +24,46 @@
     </div>
 
     <Transition name="fade">
-      <div v-if="indexOtwarty !== null" class="lightbox" @click="indexOtwarty = null">
+      <div v-if="indexOtwarty !== null" class="lightbox" @click="handleLightboxClick">
         <button class="close-btn" type="button" aria-label="Zamknij">&times;</button>
-        <button class="nav-btn prev" type="button" aria-label="Poprzednie" @click.stop="poprzednie">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </button>
-        <div class="lightbox-content" @click.stop>
-          <div class="lightbox-stage">
-            <div v-if="slidePhase === 'loading'" class="lightbox-loader" aria-live="polite">
-              <span class="lightbox-loader-spinner" aria-hidden="true"></span>
+        <div class="lightbox-shell">
+          <button class="nav-btn prev" type="button" aria-label="Poprzednie" @click.stop="poprzednie">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div class="lightbox-content">
+            <div class="lightbox-stage">
+              <div v-if="slidePhase === 'loading'" class="lightbox-loader" aria-live="polite">
+                <span class="lightbox-loader-spinner" aria-hidden="true"></span>
+              </div>
+              <img
+                v-if="shownUrl"
+                :src="shownUrl"
+                :alt="lightboxMeta.caption || lightboxMeta.counter"
+                class="lightbox-img"
+                @click.stop
+                :class="{
+                  'is-shown': slidePhase === 'shown',
+                  'is-leaving': slidePhase === 'leaving',
+                  'is-entering': slidePhase === 'entering',
+                  'is-forward': slideDirection === 1,
+                  'is-backward': slideDirection === -1,
+                  'is-opening': slideDirection === 0,
+                }"
+              >
             </div>
-            <img
-              v-if="shownUrl"
-              :src="shownUrl"
-              :alt="lightboxMeta.caption || lightboxMeta.counter"
-              class="lightbox-img"
-              :class="{
-                'is-shown': slidePhase === 'shown',
-                'is-leaving': slidePhase === 'leaving',
-                'is-entering': slidePhase === 'entering',
-                'is-forward': slideDirection === 1,
-                'is-backward': slideDirection === -1,
-                'is-opening': slideDirection === 0,
-              }"
-            >
+            <div ref="captionBlockRef" class="lightbox-caption-block">
+              <p v-if="lightboxMeta.caption" class="lightbox-caption">{{ lightboxMeta.caption }}</p>
+              <p class="lightbox-counter">{{ lightboxMeta.counter }}</p>
+            </div>
           </div>
-          <div class="lightbox-caption-block">
-            <p v-if="lightboxMeta.caption" class="lightbox-caption">{{ lightboxMeta.caption }}</p>
-            <p class="lightbox-counter">{{ lightboxMeta.counter }}</p>
-          </div>
+          <button class="nav-btn next" type="button" aria-label="Następne" @click.stop="nastepne">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
         </div>
-        <button class="nav-btn next" type="button" aria-label="Następne" @click.stop="nastepne">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </button>
       </div>
     </Transition>
   </section>
@@ -77,6 +80,7 @@ const slidePhase = ref('idle');
 /** 1 = następne, -1 = poprzednie, 0 = pierwsze otwarcie */
 const slideDirection = ref(0);
 const sectionEl = ref(null);
+const captionBlockRef = ref(null);
 const thumbsLoaded = ref(false);
 const fullUrlCache = new Map();
 
@@ -208,6 +212,21 @@ watch(indexOtwarty, async (idx, prevIdx) => {
   });
 });
 
+function handleLightboxClick() {
+  const selection = window.getSelection();
+  const captionEl = captionBlockRef.value;
+  if (
+    selection &&
+    !selection.isCollapsed &&
+    captionEl &&
+    selection.anchorNode &&
+    captionEl.contains(selection.anchorNode)
+  ) {
+    return;
+  }
+  indexOtwarty.value = null;
+}
+
 function goToSlide(delta, event) {
   event?.stopPropagation();
   const current = indexOtwarty.value;
@@ -325,16 +344,27 @@ h2 {
   align-items: center;
   justify-content: center;
   z-index: 2000;
-  padding: 48px 72px 40px;
+  padding: 48px 16px 32px;
   box-sizing: border-box;
+}
+
+.lightbox-shell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2vw, 20px);
+  width: 100%;
+  max-width: min(100%, 1680px);
+  min-height: 0;
 }
 
 .lightbox-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: min(96vw, 1600px);
-  width: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: min(100%, 1600px);
 }
 
 .lightbox-caption-block {
@@ -349,6 +379,9 @@ h2 {
   color: rgba(255, 255, 255, 0.92);
   font-size: 0.95rem;
   line-height: 1.45;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
 }
 
 .lightbox-counter {
@@ -364,16 +397,16 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: min(96vw, 1600px);
-  max-height: 90vh;
-  min-height: min(50vh, 400px);
+  width: 100%;
+  max-height: calc(100vh - 140px);
+  min-height: min(40vh, 320px);
   flex: 0 1 auto;
   overflow: hidden;
 }
 
 .lightbox-img {
-  max-width: min(96vw, 1600px);
-  max-height: 90vh;
+  max-width: 100%;
+  max-height: calc(100vh - 140px);
   object-fit: contain;
   border-radius: 4px;
   opacity: 0;
@@ -442,31 +475,35 @@ h2 {
   position: absolute;
   top: 16px;
   right: 24px;
+  z-index: 5;
   background: none;
   border: none;
   color: white;
   font-size: 2.5rem;
   cursor: pointer;
   line-height: 1;
+  touch-action: manipulation;
 }
 
 .nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.12);
+  flex: 0 0 auto;
+  background: #ffffff;
   border: none;
-  color: white;
+  color: #1a1a1a;
   width: 48px;
   height: 48px;
   padding: 0;
   border-radius: 50%;
   cursor: pointer;
-  transition: background 0.3s;
-  flex-shrink: 0;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .nav-btn svg {
@@ -476,20 +513,31 @@ h2 {
 }
 
 .nav-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
 }
 
-.nav-btn.prev { left: 16px; }
-.nav-btn.next { right: 16px; }
+.nav-btn:active {
+  transform: scale(0.96);
+}
 
 @media (max-width: 640px) {
   .lightbox {
-    padding: 44px 56px 32px;
+    padding: 44px 8px 24px;
+    align-items: stretch;
+  }
+
+  .lightbox-shell {
+    flex: 1;
+    align-self: center;
+    gap: 6px;
+    max-width: 100%;
   }
 
   .nav-btn {
-    width: 42px;
-    height: 42px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .nav-btn svg {
@@ -497,8 +545,14 @@ h2 {
     height: 20px;
   }
 
-  .nav-btn.prev { left: 8px; }
-  .nav-btn.next { right: 8px; }
+  .lightbox-stage {
+    max-height: calc(100vh - 120px);
+    min-height: 0;
+  }
+
+  .lightbox-img {
+    max-height: calc(100vh - 120px);
+  }
 
   .lightbox-caption-block {
     margin-top: 10px;
@@ -506,6 +560,44 @@ h2 {
 
   .lightbox-caption {
     font-size: 0.85rem;
+  }
+
+  .close-btn {
+    top: 10px;
+    right: 12px;
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .lightbox-shell {
+    position: relative;
+    display: block;
+  }
+
+  .lightbox-content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .nav-btn {
+    position: absolute;
+    top: 42%;
+    transform: translateY(-50%);
+    z-index: 10;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  }
+
+  .nav-btn:active {
+    transform: translateY(-50%) scale(0.96);
+  }
+
+  .nav-btn.prev {
+    left: 4px;
+  }
+
+  .nav-btn.next {
+    right: 4px;
   }
 }
 
