@@ -320,6 +320,12 @@ onUnmounted(() => {
     margin-top: 0;
     scroll-margin-top: var(--nav-mobile-height);
   }
+
+  @supports not (-webkit-touch-callout: none) {
+    .hero-container {
+      scroll-margin-top: 0;
+    }
+  }
 }
 
 @media (max-width: 1024px) {

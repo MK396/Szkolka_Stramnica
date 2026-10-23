@@ -180,6 +180,15 @@ let savedScrollY = 0;
 let savedHtmlBg = '';
 let savedBodyBg = '';
 let lightboxLocked = false;
+let lockedShell = null;
+let savedShellScroll = 0;
+
+function getPageScroller() {
+  const shell = document.querySelector('.page-shell');
+  if (!shell) return null;
+  const oy = getComputedStyle(shell).overflowY;
+  return oy === 'auto' || oy === 'scroll' ? shell : null;
+}
 
 function onLightboxTouchMove(e) {
   const cap = captionBlockRef.value;
@@ -218,16 +227,23 @@ function setLightboxPageScrollLock(locked) {
   if (locked === lightboxLocked) return;
   lightboxLocked = locked;
   if (locked) {
-    savedScrollY = window.scrollY;
     savedHtmlBg = document.documentElement.style.backgroundColor;
     savedBodyBg = document.body.style.backgroundColor;
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.top = `-${savedScrollY}px`;
-    document.body.style.width = '100%';
-    document.documentElement.style.overflow = 'hidden';
     document.documentElement.style.backgroundColor = '#0b0b0b';
     document.body.style.backgroundColor = '#0b0b0b';
+    const shell = getPageScroller();
+    if (shell) {
+      lockedShell = shell;
+      savedShellScroll = shell.scrollTop;
+      shell.style.overflow = 'hidden';
+    } else {
+      savedScrollY = window.scrollY;
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${savedScrollY}px`;
+      document.body.style.width = '100%';
+      document.documentElement.style.overflow = 'hidden';
+    }
     document.addEventListener('touchmove', onLightboxTouchMove, { passive: false });
     nextTick(() => {
       if (!lightboxLocked) return;
@@ -237,14 +253,20 @@ function setLightboxPageScrollLock(locked) {
   } else {
     unbindLightboxViewport();
     document.removeEventListener('touchmove', onLightboxTouchMove);
-    document.body.style.overflow = '';
-    document.body.style.position = '';
-    document.body.style.top = '';
-    document.body.style.width = '';
-    document.documentElement.style.overflow = '';
     document.documentElement.style.backgroundColor = savedHtmlBg;
     document.body.style.backgroundColor = savedBodyBg;
-    window.scrollTo({ top: savedScrollY, left: 0, behavior: 'instant' });
+    if (lockedShell) {
+      lockedShell.style.overflow = '';
+      lockedShell.scrollTop = savedShellScroll;
+      lockedShell = null;
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      document.documentElement.style.overflow = '';
+      window.scrollTo({ top: savedScrollY, left: 0, behavior: 'instant' });
+    }
   }
 }
 

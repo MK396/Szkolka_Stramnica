@@ -829,6 +829,14 @@
   }
 
   .menu a.active::after { display: none; }
+
+  @supports not (-webkit-touch-callout: none) {
+    .navbar-wrapper {
+      position: relative;
+      top: auto;
+      flex: none;
+    }
+  }
 }
 </style>
 
@@ -851,7 +859,22 @@ let scrollSpyUnlockTimer = null;
 let scrollEndTimer = null;
 let snappingToTop = false;
 
+let pageScrollerEl = null;
+
+function getPageScroller() {
+  const shell = document.querySelector('.page-shell');
+  if (!shell) return null;
+  const oy = getComputedStyle(shell).overflowY;
+  return oy === 'auto' || oy === 'scroll' ? shell : null;
+}
+
+function scrollTopOfPage() {
+  const scroller = getPageScroller();
+  return scroller ? scroller.scrollTop : window.scrollY;
+}
+
 function getNavOffset() {
+  if (getPageScroller()) return 0;
   if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1000px)').matches) {
     return 72;
   }
@@ -872,6 +895,12 @@ const isSectionActive = (hash) =>
 const scrollToHash = (hash) => {
   const el = document.querySelector(hash);
   if (!el) return;
+  const scroller = getPageScroller();
+  if (scroller) {
+    const top = el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+    scroller.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+    return;
+  }
   const top = el.getBoundingClientRect().top + window.scrollY - getNavOffset();
   window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
 };
@@ -882,7 +911,9 @@ const goHome = async () => {
   if (route.path !== '/') {
     await router.push('/');
   }
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  const scroller = getPageScroller();
+  if (scroller) scroller.scrollTo({ top: 0, behavior: 'smooth' });
+  else window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
 const lockScrollSpy = (hash) => {
@@ -916,7 +947,7 @@ const updateActiveSection = () => {
     return;
   }
 
-  if (window.scrollY < 180) {
+  if (scrollTopOfPage() < 180) {
     activeSection.value = '';
     return;
   }
@@ -926,12 +957,17 @@ const updateActiveSection = () => {
     return;
   }
 
+  const scroller = getPageScroller();
+  const limit = scroller
+    ? scroller.getBoundingClientRect().top + 40
+    : getSectionProbe();
+
   let current = '';
   for (let i = SECTION_IDS.length - 1; i >= 0; i--) {
     const id = SECTION_IDS[i];
     const el = document.getElementById(id);
     if (!el) continue;
-    if (el.getBoundingClientRect().top <= getSectionProbe()) {
+    if (el.getBoundingClientRect().top <= limit) {
       current = `#${id}`;
       break;
     }
@@ -939,12 +975,13 @@ const updateActiveSection = () => {
   activeSection.value = current;
 };
 
-  const handleScroll = () => {
-  const offset = window.scrollY;
+const handleScroll = () => {
+  const offset = scrollTopOfPage();
   if (offset > 100) isShrunk.value = true;
   else if (offset < 20) isShrunk.value = false;
   updateActiveSection();
 
+  if (getPageScroller()) return;
   if (window.matchMedia('(max-width: 1000px)').matches) {
     clearTimeout(scrollEndTimer);
     scrollEndTimer = setTimeout(() => {
@@ -957,8 +994,26 @@ const updateActiveSection = () => {
   }
 };
 
+function bindPageScroller() {
+  const next = getPageScroller();
+  if (next === pageScrollerEl) return;
+  pageScrollerEl?.removeEventListener('scroll', handleScroll);
+  pageScrollerEl = next;
+  pageScrollerEl?.addEventListener('scroll', handleScroll, { passive: true });
+}
+
 watch(isMenuOpen, (open) => {
   if (typeof document === 'undefined') return;
+  const shell = document.querySelector('.page-shell');
+  const shellScrolls = shell && (
+    getComputedStyle(shell).overflowY === 'auto' ||
+    getComputedStyle(shell).overflowY === 'scroll' ||
+    shell.style.overflowY === 'hidden'
+  );
+  if (shellScrolls) {
+    shell.style.overflowY = open ? 'hidden' : '';
+    return;
+  }
   document.body.style.overflow = open ? 'hidden' : '';
 });
 
@@ -1058,12 +1113,16 @@ updateOpeningStatus();
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('resize', bindPageScroller);
+  bindPageScroller();
   handleScroll();
   timer = setInterval(updateOpeningStatus, 60000);
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
+  window.removeEventListener('resize', bindPageScroller);
+  pageScrollerEl?.removeEventListener('scroll', handleScroll);
   clearInterval(timer);
   clearTimeout(scrollSpyUnlockTimer);
   clearTimeout(scrollEndTimer);

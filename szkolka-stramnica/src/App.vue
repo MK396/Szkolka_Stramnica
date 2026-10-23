@@ -50,9 +50,36 @@ body {
     scroll-padding-top: var(--nav-mobile-height);
   }
 
-  /* Navbar jest fixed — ten odstęp trzyma hero pod paskiem także po powrocie na górę. */
+  /* Safari: navbar jest fixed, więc treść schodzi poniżej niego. */
   .page-shell {
     padding-top: var(--nav-mobile-height);
+  }
+
+  /* Chrome chowa pasek adresu przy scrollu i zsuwa fixed/sticky navbar na hero.
+     Dokument się nie przewija — pasek zostaje nad treścią. */
+  @supports not (-webkit-touch-callout: none) {
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden;
+    }
+
+    .page-shell {
+      flex: 1 1 auto;
+      min-height: 0;
+      padding-top: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior-y: contain;
+    }
   }
 }
 
