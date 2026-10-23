@@ -562,7 +562,11 @@ const isMenuOpen = ref(false);
 const activeSection = ref('');
 
 const NAV_OFFSET = 100;
+const SECTION_PROBE = NAV_OFFSET + 40;
 const SECTION_IDS = ['opis', 'oferta', 'galeria'];
+
+let scrollSpyLockedHash = null;
+let scrollSpyUnlockTimer = null;
 
 const isStartActive = computed(
   () => route.path === '/' && activeSection.value === ''
@@ -587,9 +591,19 @@ const goHome = async () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
+const lockScrollSpy = (hash) => {
+  scrollSpyLockedHash = hash;
+  clearTimeout(scrollSpyUnlockTimer);
+  scrollSpyUnlockTimer = setTimeout(() => {
+    scrollSpyLockedHash = null;
+    updateActiveSection();
+  }, 450);
+};
+
 const goToSection = async (hash) => {
   isMenuOpen.value = false;
   activeSection.value = hash;
+  lockScrollSpy(hash);
   if (route.path !== '/') {
     await router.push({ path: '/', hash });
     await nextTick();
@@ -613,12 +627,20 @@ const updateActiveSection = () => {
     return;
   }
 
+  if (scrollSpyLockedHash) {
+    activeSection.value = scrollSpyLockedHash;
+    return;
+  }
+
   let current = '';
-  for (const id of SECTION_IDS) {
+  for (let i = SECTION_IDS.length - 1; i >= 0; i--) {
+    const id = SECTION_IDS[i];
     const el = document.getElementById(id);
     if (!el) continue;
-    const top = el.getBoundingClientRect().top - NAV_OFFSET;
-    if (top <= 80) current = `#${id}`;
+    if (el.getBoundingClientRect().top <= SECTION_PROBE) {
+      current = `#${id}`;
+      break;
+    }
   }
   activeSection.value = current;
 };
@@ -642,6 +664,7 @@ watch(
     await nextTick();
     if (route.path === '/' && route.hash) {
       activeSection.value = route.hash;
+      lockScrollSpy(route.hash);
       setTimeout(() => scrollToHash(route.hash), 80);
     } else if (route.path !== '/') {
       activeSection.value = '';
@@ -732,5 +755,6 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
   clearInterval(timer);
+  clearTimeout(scrollSpyUnlockTimer);
 });
 </script>
