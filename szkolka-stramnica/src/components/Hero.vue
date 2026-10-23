@@ -211,6 +211,12 @@ onUnmounted(() => {
 }
 
 /* mniej kolumn → szersze kafelki ≈ kwadrat; zawsze 12 komórek */
+@media (max-width: 1000px) {
+  .hero-container {
+    margin-top: 0;
+  }
+}
+
 @media (max-width: 1024px) {
   .hero-container { height: 48vh; max-height: 480px; }
   .bg-grid {

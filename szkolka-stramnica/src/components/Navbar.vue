@@ -443,6 +443,47 @@
 .hamburger-btn.is-active .bar:nth-child(2) { opacity: 0; width: 0; }
 .hamburger-btn.is-active .bar:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
 
+@media (min-width: 1001px) {
+  .nav-content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: 1fr;
+    align-items: center;
+    column-gap: 12px;
+  }
+
+  .left-element {
+    position: static;
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    width: max-content;
+  }
+
+  .right-element {
+    grid-column: 2;
+    grid-row: 1;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .top-info-row {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .info-group {
+    justify-content: center;
+  }
+
+  .bottom-nav {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 1000px) {
 
   .navbar-wrapper {
@@ -470,7 +511,7 @@
     min-height: 72px;
     max-height: 72px;
     max-width: none;
-    padding: 0 16px;
+    padding: 0 8px;
     align-items: center;
     gap: 6px;
     overflow: visible;
@@ -585,12 +626,12 @@
   }
 
   .mhi-chip-icon svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
   }
 
   .mhi-chip-label {
-    font-size: 0.8rem;
+    font-size: 0.74rem;
     font-weight: 600;
     color: #444;
     line-height: 1.1;

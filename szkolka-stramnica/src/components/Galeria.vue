@@ -27,13 +27,12 @@
       <div v-if="indexOtwarty !== null" class="lightbox" @click="handleLightboxClick">
         <button class="close-btn" type="button" aria-label="Zamknij">&times;</button>
         <div class="lightbox-shell">
-          <button class="nav-btn prev" type="button" aria-label="Poprzednie" @click.stop="poprzednie">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
           <div class="lightbox-content">
-            <div class="lightbox-stage">
+            <div
+              class="lightbox-stage"
+              @touchstart.passive="onTouchStart"
+              @touchend="onTouchEnd"
+            >
               <div v-if="slidePhase === 'loading'" class="lightbox-loader" aria-live="polite">
                 <span class="lightbox-loader-spinner" aria-hidden="true"></span>
               </div>
@@ -57,12 +56,19 @@
               <p v-if="lightboxMeta.caption" class="lightbox-caption">{{ lightboxMeta.caption }}</p>
               <p class="lightbox-counter">{{ lightboxMeta.counter }}</p>
             </div>
+            <div class="lightbox-nav-row">
+              <button class="nav-btn prev" type="button" aria-label="Poprzednie" @click.stop="poprzednie">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+              <button class="nav-btn next" type="button" aria-label="Następne" @click.stop="nastepne">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
           </div>
-          <button class="nav-btn next" type="button" aria-label="Następne" @click.stop="nastepne">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-          </button>
         </div>
       </div>
     </Transition>
@@ -240,6 +246,27 @@ const nastepne = (event) => goToSlide(1, event);
 
 const poprzednie = (event) => goToSlide(-1, event);
 
+const SWIPE_MIN_PX = 48;
+let touchStartX = 0;
+let touchStartY = 0;
+
+function onTouchStart(e) {
+  const t = e.touches[0];
+  if (!t) return;
+  touchStartX = t.clientX;
+  touchStartY = t.clientY;
+}
+
+function onTouchEnd(e) {
+  if (indexOtwarty.value === null) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchStartX;
+  const dy = t.clientY - touchStartY;
+  if (Math.abs(dx) < SWIPE_MIN_PX || Math.abs(dx) < Math.abs(dy)) return;
+  if (dx < 0) nastepne(e);
+  else poprzednie(e);
+}
+
 const handleKeydown = (e) => {
   if (indexOtwarty.value === null) return;
   if (e.key === 'ArrowRight') nastepne(e);
@@ -270,7 +297,7 @@ onUnmounted(() => {
 
 <style scoped>
 .galeria-container {
-  padding: 60px 20px;
+  padding: var(--section-gap) 0 var(--section-gap);
   text-align: center;
   width: 100%;
   box-sizing: border-box;
@@ -278,8 +305,9 @@ onUnmounted(() => {
 
 h2 {
   color: #2e7d32;
-  font-size: 2rem;
-  margin-bottom: 30px;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  margin-bottom: 40px;
+  font-weight: 700;
 }
 
 .galeria-grid {
@@ -289,6 +317,12 @@ h2 {
   width: 100%;
   margin: 0 auto;
   box-sizing: border-box;
+}
+
+@media (max-width: 639px) {
+  .galeria-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .foto-item {
@@ -301,8 +335,13 @@ h2 {
 }
 
 @media (max-width: 480px) {
+  h2 {
+    margin-bottom: 25px;
+  }
+}
+
+@media (max-width: 480px) {
   .galeria-grid {
-    grid-template-columns: repeat(2, 1fr);
     gap: 8px;
   }
 }
@@ -352,7 +391,6 @@ h2 {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 2vw, 20px);
   width: 100%;
   max-width: min(100%, 1680px);
   min-height: 0;
@@ -364,7 +402,17 @@ h2 {
   align-items: center;
   flex: 1 1 auto;
   min-width: 0;
+  width: 100%;
   max-width: min(100%, 1600px);
+}
+
+.lightbox-nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 16px;
+  flex-shrink: 0;
 }
 
 .lightbox-caption-block {
@@ -398,16 +446,18 @@ h2 {
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-height: calc(100vh - 140px);
+  max-height: calc(100vh - 200px);
   min-height: min(40vh, 320px);
   flex: 0 1 auto;
   overflow: hidden;
+  touch-action: pan-y pinch-zoom;
 }
 
 .lightbox-img {
   max-width: 100%;
-  max-height: calc(100vh - 140px);
+  max-height: calc(100vh - 200px);
   object-fit: contain;
+  width: 100%;
   border-radius: 4px;
   opacity: 0;
   transform: translateX(0);
@@ -522,14 +572,13 @@ h2 {
 
 @media (max-width: 640px) {
   .lightbox {
-    padding: 44px 8px 24px;
+    padding: 44px 15px 20px;
     align-items: stretch;
   }
 
   .lightbox-shell {
     flex: 1;
     align-self: center;
-    gap: 6px;
     max-width: 100%;
   }
 
@@ -546,16 +595,21 @@ h2 {
   }
 
   .lightbox-stage {
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 210px);
     min-height: 0;
   }
 
   .lightbox-img {
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 210px);
   }
 
   .lightbox-caption-block {
     margin-top: 10px;
+  }
+
+  .lightbox-nav-row {
+    margin-top: 12px;
+    gap: 16px;
   }
 
   .lightbox-caption {
@@ -566,38 +620,6 @@ h2 {
     top: 10px;
     right: 12px;
     font-size: 2.2rem;
-  }
-}
-
-@media (max-width: 380px) {
-  .lightbox-shell {
-    position: relative;
-    display: block;
-  }
-
-  .lightbox-content {
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .nav-btn {
-    position: absolute;
-    top: 42%;
-    transform: translateY(-50%);
-    z-index: 10;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
-  }
-
-  .nav-btn:active {
-    transform: translateY(-50%) scale(0.96);
-  }
-
-  .nav-btn.prev {
-    left: 4px;
-  }
-
-  .nav-btn.next {
-    right: 4px;
   }
 }
 

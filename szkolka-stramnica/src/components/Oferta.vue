@@ -80,14 +80,15 @@
 
 <style scoped>
   .oferta-container {
-    padding: 50px 20px;
+    padding: var(--section-gap) 0 0;
     text-align: center;
   }
 
   h2 {
     color: #2e7d32;
-    font-size: 2rem;
-    margin-bottom: 30px;
+    font-size: clamp(1.5rem, 4vw, 2.2rem);
+    margin-bottom: 40px;
+    font-weight: 700;
   }
 
   .oferta-text-grid {
@@ -111,6 +112,7 @@
   .oferta-text p {
     margin-bottom: 20px;
     line-height: 1.8;
+    color: #333;
   }
 
   .rosliny-grid-wrapper {
@@ -168,10 +170,30 @@
   }
 
   @media (max-width: 768px) {
+    .oferta-text-grid {
+      padding: 0;
+      gap: 28px;
+    }
+
+    .oferta-text {
+      font-size: 1.05rem;
+    }
+
     .oferta-text,
     .rosliny-grid-wrapper {
       flex: 1 1 100%;
       min-width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h2 {
+      margin-bottom: 25px;
+    }
+
+    .oferta-text p {
+      font-size: 1rem;
+      line-height: 1.6;
     }
   }
 </style>

@@ -10,6 +10,10 @@ import Navbar from './components/Navbar.vue';
 </script>
 
 <style>
+:root {
+  --section-gap: 60px;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -30,5 +34,15 @@ body {
   line-height: 1.6;
   color: #333;
   background-color: #fcfdfc;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --section-gap: 40px;
+  }
+
+  .container {
+    padding: 0 15px;
+  }
 }
 </style>
