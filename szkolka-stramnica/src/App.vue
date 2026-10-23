@@ -1,9 +1,9 @@
 <template>
   <Navbar />
-  
-  <router-view />
-
-  </template>
+  <div class="page-shell">
+    <router-view />
+  </div>
+</template>
 
 <script setup>
 import Navbar from './components/Navbar.vue';
@@ -48,6 +48,11 @@ body {
 @media (max-width: 1000px) {
   html {
     scroll-padding-top: var(--nav-mobile-height);
+  }
+
+  /* Navbar jest fixed — ten odstęp trzyma hero pod paskiem także po powrocie na górę. */
+  .page-shell {
+    padding-top: var(--nav-mobile-height);
   }
 }
 

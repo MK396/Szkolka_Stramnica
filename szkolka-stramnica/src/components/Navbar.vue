@@ -483,7 +483,11 @@
 @media (max-width: 1000px) {
 
   .navbar-wrapper {
-    position: sticky;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 1100;
   }
 
@@ -560,7 +564,7 @@
     align-items: center;
     justify-content: center;
     align-self: center;
-    gap: clamp(4px, 2vw, 10px);
+    gap: 4px;
     min-width: 0;
     height: 100%;
     overflow: hidden;
@@ -568,9 +572,9 @@
 
   .mobile-header-fb {
     flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    margin-left: clamp(4px, 2vw, 10px);
+    width: 24px;
+    height: 24px;
+    margin-left: 2px;
   }
 
   .hamburger-btn {
@@ -599,9 +603,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 5px;
+    gap: 3px;
     min-width: 0;
-    max-width: 38%;
+    flex: 0 1 auto;
     padding: 0;
     border-radius: 8px;
     text-decoration: none;
@@ -629,12 +633,12 @@
   }
 
   .mhi-chip-icon svg {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
   }
 
   .mhi-chip-label {
-    font-size: 0.74rem;
+    font-size: clamp(0.58rem, 2.85vw, 0.66rem);
     font-weight: 600;
     color: #444;
     line-height: 1.1;
@@ -845,6 +849,7 @@ const SECTION_IDS = ['opis', 'oferta', 'galeria'];
 let scrollSpyLockedHash = null;
 let scrollSpyUnlockTimer = null;
 let scrollEndTimer = null;
+let snappingToTop = false;
 
 function getNavOffset() {
   if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1000px)').matches) {
@@ -934,20 +939,21 @@ const updateActiveSection = () => {
   activeSection.value = current;
 };
 
-const handleScroll = () => {
+  const handleScroll = () => {
   const offset = window.scrollY;
   if (offset > 100) isShrunk.value = true;
   else if (offset < 20) isShrunk.value = false;
   updateActiveSection();
 
-  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1000px)').matches) {
+  if (window.matchMedia('(max-width: 1000px)').matches) {
     clearTimeout(scrollEndTimer);
     scrollEndTimer = setTimeout(() => {
       const y = window.scrollY;
-      if (y > 0 && y < 72) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }, 120);
+      if (snappingToTop || y <= 0 || y >= 72) return;
+      snappingToTop = true;
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      setTimeout(() => { snappingToTop = false; }, 400);
+    }, 160);
   }
 };
 

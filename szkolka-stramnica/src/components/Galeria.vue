@@ -23,8 +23,14 @@
       </div>
     </div>
 
+    <Teleport to="body">
     <Transition name="fade">
-      <div v-if="indexOtwarty !== null" class="lightbox" @click="handleLightboxClick">
+      <div
+        v-if="indexOtwarty !== null"
+        ref="lightboxRef"
+        class="lightbox"
+        @click="handleLightboxClick"
+      >
         <button class="close-btn" type="button" aria-label="Zamknij">&times;</button>
         <div class="lightbox-shell">
           <button class="nav-btn prev" type="button" aria-label="Poprzednie" @click.stop="poprzednie">
@@ -70,6 +76,7 @@
         </div>
       </div>
     </Transition>
+    </Teleport>
   </section>
 </template>
 
@@ -85,6 +92,7 @@ const slidePhase = ref('idle');
 const slideDirection = ref(0);
 const sectionEl = ref(null);
 const captionBlockRef = ref(null);
+const lightboxRef = ref(null);
 const thumbsLoaded = ref(false);
 const fullUrlCache = new Map();
 
@@ -169,6 +177,9 @@ async function loadFullForIndex(idx) {
 }
 
 let savedScrollY = 0;
+let savedHtmlBg = '';
+let savedBodyBg = '';
+let lightboxLocked = false;
 
 function onLightboxTouchMove(e) {
   const cap = captionBlockRef.value;
@@ -176,24 +187,64 @@ function onLightboxTouchMove(e) {
   e.preventDefault();
 }
 
+function applyLightboxViewport() {
+  const el = lightboxRef.value;
+  if (!el) return;
+  const vv = window.visualViewport;
+  const top = vv ? vv.offsetTop : 0;
+  const visibleBottom = vv ? vv.offsetTop + vv.height : window.innerHeight;
+  const height = Math.max(window.innerHeight, visibleBottom);
+  const px = `${Math.ceil(height - top)}px`;
+  el.style.top = `${top}px`;
+  el.style.height = px;
+  el.style.minHeight = px;
+}
+
+function bindLightboxViewport() {
+  applyLightboxViewport();
+  window.visualViewport?.addEventListener('resize', applyLightboxViewport);
+  window.visualViewport?.addEventListener('scroll', applyLightboxViewport);
+  window.addEventListener('resize', applyLightboxViewport);
+}
+
+function unbindLightboxViewport() {
+  window.visualViewport?.removeEventListener('resize', applyLightboxViewport);
+  window.visualViewport?.removeEventListener('scroll', applyLightboxViewport);
+  window.removeEventListener('resize', applyLightboxViewport);
+}
+
 function setLightboxPageScrollLock(locked) {
   if (typeof document === 'undefined') return;
+  if (locked === lightboxLocked) return;
+  lightboxLocked = locked;
   if (locked) {
     savedScrollY = window.scrollY;
+    savedHtmlBg = document.documentElement.style.backgroundColor;
+    savedBodyBg = document.body.style.backgroundColor;
     document.body.style.overflow = 'hidden';
     document.body.style.position = 'fixed';
     document.body.style.top = `-${savedScrollY}px`;
     document.body.style.width = '100%';
     document.documentElement.style.overflow = 'hidden';
+    document.documentElement.style.backgroundColor = '#0b0b0b';
+    document.body.style.backgroundColor = '#0b0b0b';
     document.addEventListener('touchmove', onLightboxTouchMove, { passive: false });
+    nextTick(() => {
+      if (!lightboxLocked) return;
+      bindLightboxViewport();
+      requestAnimationFrame(applyLightboxViewport);
+    });
   } else {
+    unbindLightboxViewport();
     document.removeEventListener('touchmove', onLightboxTouchMove);
     document.body.style.overflow = '';
     document.body.style.position = '';
     document.body.style.top = '';
     document.body.style.width = '';
     document.documentElement.style.overflow = '';
-    window.scrollTo(0, savedScrollY);
+    document.documentElement.style.backgroundColor = savedHtmlBg;
+    document.body.style.backgroundColor = savedBodyBg;
+    window.scrollTo({ top: savedScrollY, left: 0, behavior: 'instant' });
   }
 }
 
@@ -409,7 +460,13 @@ h2 {
 
 .lightbox {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100lvh;
   background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
@@ -640,7 +697,7 @@ h2 {
 
 @media (max-width: 640px) {
   .lightbox {
-    padding: 44px 15px 20px;
+    padding: 44px 15px max(20px, env(safe-area-inset-bottom));
     align-items: stretch;
   }
 
