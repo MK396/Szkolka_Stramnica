@@ -6,7 +6,7 @@
       :fade-effect="{ crossFade: true }"
       :slides-per-view="1"
       :pagination="{ clickable: true }"
-      :navigation="true"
+      :navigation="heroNavigation"
       :autoplay="{ delay: 5000, disableOnInteraction: false }"
       :loop="true"
       class="hero-swiper"
@@ -47,6 +47,16 @@
         </div>
       </swiper-slide>
     </swiper>
+    <button type="button" class="hero-nav-btn hero-nav-prev" aria-label="Poprzednie slajd">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
+    <button type="button" class="hero-nav-btn hero-nav-next" aria-label="Następny slajd">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </button>
   </div>
 </template>
 
@@ -102,6 +112,11 @@ function onSlideChange(swiper) {
 const router = useRouter();
 const modules = [Pagination, Navigation, Autoplay, EffectFade];
 
+const heroNavigation = {
+  prevEl: '.hero-nav-prev',
+  nextEl: '.hero-nav-next',
+};
+
 const handleNavigation = (link) => {
   if (!link) return;
   if (link.startsWith('/')) {
@@ -156,9 +171,87 @@ onUnmounted(() => {
   position: relative;
   overflow: hidden;
   background-color: #1a1a1a;
+  --hero-nav-edge: 12px;
+  --hero-nav-btn-size: 48px;
+  --hero-text-side: calc(var(--hero-nav-edge) + var(--hero-nav-btn-size) + 12px);
 }
 
-.hero-swiper { width: 100%; height: 100%; }
+.hero-swiper {
+  width: 100%;
+  height: 100%;
+  --swiper-pagination-color: #ffffff;
+}
+
+.hero-nav-btn {
+  position: absolute;
+  top: 50%;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #1a1a1a;
+  cursor: pointer;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.35);
+  transform: translateY(-50%);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.hero-nav-btn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  flex-shrink: 0;
+}
+
+.hero-nav-btn:hover {
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+.hero-nav-btn:active {
+  transform: translateY(-50%) scale(0.96);
+}
+
+.hero-nav-btn.swiper-button-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.hero-nav-prev {
+  left: 12px;
+}
+
+.hero-nav-next {
+  right: 12px;
+}
+
+.hero-swiper :deep(.swiper-pagination) {
+  bottom: 14px !important;
+  line-height: 0;
+}
+
+.hero-swiper :deep(.swiper-pagination-bullet) {
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.45);
+  opacity: 1;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.hero-swiper :deep(.swiper-pagination-bullet-active) {
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transform: scale(1.08);
+}
 .slide-wrapper { position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
 
 .bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; }
@@ -188,7 +281,18 @@ onUnmounted(() => {
 
 .grid-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); }
 
-.text-overlay { position: relative; z-index: 10; color: white; text-align: center; padding: 0 20px; pointer-events: none; }
+.text-overlay {
+  position: relative;
+  z-index: 10;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  color: white;
+  text-align: center;
+  padding-left: var(--hero-text-side);
+  padding-right: var(--hero-text-side);
+  pointer-events: none;
+}
 .text-overlay h1, .text-overlay p, .btn-cta { pointer-events: auto; }
 
 .text-overlay h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin-bottom: 1rem; text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
@@ -214,6 +318,7 @@ onUnmounted(() => {
 @media (max-width: 1000px) {
   .hero-container {
     margin-top: 0;
+    scroll-margin-top: var(--nav-mobile-height);
   }
 }
 
@@ -230,6 +335,31 @@ onUnmounted(() => {
   .bg-grid {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 639px) {
+  .hero-container {
+    --hero-nav-edge: 6px;
+    --hero-nav-btn-size: 34px;
+  }
+
+  .hero-nav-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .hero-nav-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .hero-nav-prev {
+    left: 6px;
+  }
+
+  .hero-nav-next {
+    right: 6px;
   }
 }
 

@@ -12,6 +12,8 @@ import Navbar from './components/Navbar.vue';
 <style>
 :root {
   --section-gap: 60px;
+  --nav-mobile-height: 72px;
+  --content-inline: 20px;
 }
 
 html {
@@ -21,8 +23,15 @@ html {
 .container {
   max-width: 1500px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 var(--content-inline);
   width: 100%;
+}
+
+/* laptop — szersze wcięcia treści (navbar bez zmian) */
+@media (min-width: 1024px) and (max-width: 1499px) {
+  :root {
+    --content-inline: 44px;
+  }
 }
 * {
   margin: 0;
@@ -36,13 +45,16 @@ body {
   background-color: #fcfdfc;
 }
 
+@media (max-width: 1000px) {
+  html {
+    scroll-padding-top: var(--nav-mobile-height);
+  }
+}
+
 @media (max-width: 768px) {
   :root {
     --section-gap: 40px;
-  }
-
-  .container {
-    padding: 0 15px;
+    --content-inline: 15px;
   }
 }
 </style>

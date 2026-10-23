@@ -43,6 +43,15 @@
           </span>
           <span class="mhi-chip-label">728 969 006</span>
         </a>
+        <a
+          href="https://www.facebook.com/SzkolkaStramnica"
+          class="mobile-header-fb social-dot-facebook"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Facebook"
+        >
+          <FacebookIcon />
+        </a>
       </div>
 
       <div class="right-element">
@@ -91,9 +100,7 @@
 
             <div class="fb-wrapper">
                <a href="https://www.facebook.com/SzkolkaStramnica" class="social-dot-facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                  <svg class="fb-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path fill="currentColor" d="M13.5 21.5v-7h2.6l.4-3h-3V9.3c0-.84.24-1.4 1.47-1.4h1.53V5.12A19.3 19.3 0 0 0 13.86 5C11.2 5 9.5 6.56 9.5 9.18V11.5H7v3h2.5v7h4z"/>
-                  </svg>
+                  <FacebookIcon />
                </a>
             </div>
           </div>
@@ -131,9 +138,9 @@
                 +48 728 969 006
               </a>
               <a href="https://www.facebook.com/SzkolkaStramnica" class="mi-facebook" target="_blank" rel="noopener noreferrer">
-                <svg class="fb-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                  <path fill="currentColor" d="M13.5 21.5v-7h2.6l.4-3h-3V9.3c0-.84.24-1.4 1.47-1.4h1.53V5.12A19.3 19.3 0 0 0 13.86 5C11.2 5 9.5 6.56 9.5 9.18V11.5H7v3h2.5v7h4z"/>
-                </svg>
+                <span class="mi-facebook-icon" aria-hidden="true">
+                  <FacebookIcon />
+                </span>
                 Facebook
               </a>
             </div>
@@ -346,26 +353,15 @@
 .social-dot-facebook {
   width: 36px;
   height: 36px;
-  background-color: #3b5998;
-  color: white;
-  border-radius: 50%;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  transition: transform 0.2s, background-color 0.2s;
+  transition: transform 0.2s ease;
 }
 .social-dot-facebook:hover {
-  background-color: #2d4373;
-  transform: scale(1.1);
-}
-
-.fb-icon {
-  width: 18px;
-  height: 18px;
-  display: block;
-  /* „f” jest asymetryczne — lekkie przesunięcie w lewo = optyczny środek */
-  transform: translateX(-1.5px);
+  transform: scale(1.08);
 }
 
 .bottom-nav {
@@ -564,10 +560,17 @@
     align-items: center;
     justify-content: center;
     align-self: center;
-    gap: clamp(6px, 2.5vw, 14px);
+    gap: clamp(4px, 2vw, 10px);
     min-width: 0;
     height: 100%;
     overflow: hidden;
+  }
+
+  .mobile-header-fb {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    margin-left: clamp(4px, 2vw, 10px);
   }
 
   .hamburger-btn {
@@ -598,7 +601,7 @@
     justify-content: center;
     gap: 5px;
     min-width: 0;
-    max-width: 46%;
+    max-width: 38%;
     padding: 0;
     border-radius: 8px;
     text-decoration: none;
@@ -659,8 +662,15 @@
     left: 0;
     right: 0;
     width: 100%;
+    height: 0;
+    overflow: hidden;
     pointer-events: none;
     z-index: 4;
+  }
+
+  .navbar-wrapper.mobile-nav-open .right-element {
+    height: auto;
+    overflow: visible;
   }
 
   .bottom-nav {
@@ -770,17 +780,26 @@
   .mi-facebook {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     font-size: 0.85rem;
     font-weight: 700;
-    color: #ffffff;
-    background-color: #3b5998;
-    padding: 6px 16px;
+    color: #0163e0;
+    background-color: rgba(1, 99, 224, 0.08);
+    padding: 6px 14px 6px 10px;
     border-radius: 20px;
     text-decoration: none;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
   }
-  .mi-facebook:hover { background-color: #2d4373; }
+  .mi-facebook:hover {
+    background-color: rgba(1, 99, 224, 0.14);
+  }
+
+  .mi-facebook-icon {
+    display: block;
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
 
   .menu {
     flex-direction: column;
@@ -812,6 +831,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import FacebookIcon from './FacebookIcon.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -820,12 +840,22 @@ const isShrunk = ref(false);
 const isMenuOpen = ref(false);
 const activeSection = ref('');
 
-const NAV_OFFSET = 100;
-const SECTION_PROBE = NAV_OFFSET + 40;
 const SECTION_IDS = ['opis', 'oferta', 'galeria'];
 
 let scrollSpyLockedHash = null;
 let scrollSpyUnlockTimer = null;
+let scrollEndTimer = null;
+
+function getNavOffset() {
+  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1000px)').matches) {
+    return 72;
+  }
+  return isShrunk.value ? 80 : 100;
+}
+
+function getSectionProbe() {
+  return getNavOffset() + 40;
+}
 
 const isStartActive = computed(
   () => route.path === '/' && activeSection.value === ''
@@ -837,7 +867,7 @@ const isSectionActive = (hash) =>
 const scrollToHash = (hash) => {
   const el = document.querySelector(hash);
   if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - NAV_OFFSET;
+  const top = el.getBoundingClientRect().top + window.scrollY - getNavOffset();
   window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
 };
 
@@ -896,7 +926,7 @@ const updateActiveSection = () => {
     const id = SECTION_IDS[i];
     const el = document.getElementById(id);
     if (!el) continue;
-    if (el.getBoundingClientRect().top <= SECTION_PROBE) {
+    if (el.getBoundingClientRect().top <= getSectionProbe()) {
       current = `#${id}`;
       break;
     }
@@ -909,6 +939,16 @@ const handleScroll = () => {
   if (offset > 100) isShrunk.value = true;
   else if (offset < 20) isShrunk.value = false;
   updateActiveSection();
+
+  if (typeof window !== 'undefined' && window.matchMedia('(max-width: 1000px)').matches) {
+    clearTimeout(scrollEndTimer);
+    scrollEndTimer = setTimeout(() => {
+      const y = window.scrollY;
+      if (y > 0 && y < 72) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }, 120);
+  }
 };
 
 watch(isMenuOpen, (open) => {
@@ -1020,6 +1060,7 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll);
   clearInterval(timer);
   clearTimeout(scrollSpyUnlockTimer);
+  clearTimeout(scrollEndTimer);
   if (typeof document !== 'undefined') document.body.style.overflow = '';
 });
 </script>

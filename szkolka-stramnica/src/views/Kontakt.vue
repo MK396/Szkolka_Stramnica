@@ -203,7 +203,7 @@ const handleSubmit = () => {
 
 <style scoped>
 .kontakt-page {
-  padding: 60px 20px;
+  padding: 60px var(--content-inline, 20px);
   background-color: #f8faf8;
   min-height: 80vh;
 }
