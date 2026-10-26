@@ -44,12 +44,37 @@ Czysty frontend bez własnego backendu. Strona pokazuje historię i ofertę szk�
 
 ## Optymalizacja
 
-Strona jest zoptymalizowana pod szybkie ładowanie i mniejszy transfer:
+Wydajność jest weryfikowana m.in. w **[WebPageTest](https://www.webpagetest.org/)** (waterfall, LCP, rozmiar transferu, cache) oraz uzupełniająco w **PageSpeed Insights** / **Lighthouse** (Core Web Vitals, audyty zasobów). Poniżej decyzje techniczne powiązane z tymi pomiarami.
 
-- **WebP** — zdjęcia galerii i hero w formacie WebP
-- **Miniatury** — w siatce galerii i hero używane są thumbs (`assets/photos_gallery/thumbs/`); pełne zdjęcia ładują się dopiero w lightboxie
-- **Lazy-loading** — atrybut `loading="lazy"` na obrazach poza pierwszym widokiem
-- **Dynamiczny lightbox** — kod podglądu galerii jest dołączany przy otwarciu, a nie przy starcie strony
+### LCP i pierwszy ekran
+
+- **Preload obrazu hero** — w `index.html` osobne `link rel="preload"` dla slajdu mobilnego i desktopowego (`media`, `fetchpriority="high"`), żeby element LCP nie czekał w kolejce za JS/CSS.
+- **Osobne pliki hero** — `slide*-mobile.webp` vs pełnowymiarowe slajdy; mniejszy transfer na telefonach bez obciążania desktopu.
+- **Logo i ikony** — WebP / inline SVG zamiast ciężkich bitmap tam, gdzie to możliwe.
+
+### Mniejszy transfer i krótszy waterfall
+
+- **WebP** — galeria i hero w formacie WebP.
+- **Miniatury vs pełne zdjęcia** — siatka galerii i siatka w trzecim slajdzie hero korzystają z `assets/photos_gallery/thumbs/`; katalog `full/` ładuje się na żądanie (lightbox, hover / prefetch sąsiadów).
+- **`import.meta.glob`** — lazy import miniatur i pełnych plików galerii; pełna paczka zdjęć nie trafia do początkowego bundla JS.
+- **Lazy-loading** — `loading="lazy"` i `decoding="async"` na obrazach poniżej pierwszego widoku (galeria, sekcja O nas).
+- **Ładowanie „na widok”** — `IntersectionObserver` dla miniatur galerii (dopiero przy zbliżeniu do sekcji) oraz dla iframe mapy Google (embed nie startuje od razu po wejściu na stronę).
+- **Trzeci slajd hero** — miniatury siatki ładują się po przejściu na slajd z galerią, nie przy starcie aplikacji.
+
+### Interakcja i galeria
+
+- **Prefetch w lightboxie** — po otwarciu podglądu i przy najechaniu na kafelki doładowywane są sąsiednie pełne zdjęcia; przed pokazaniem używane jest `Image.decode()`, żeby ograniczyć migotanie i przesunięcia layoutu.
+- **Animacja Ken Burns** — tylko od szerokości ≥1025px, bez dodatkowej pracy GPU na mobile w pierwszym widoku.
+
+### Cache i dostarczanie (produkcja)
+
+- **Vite** — pliki w `dist/assets/` z hashem w nazwie.
+- **Nginx** — `gzip` dla tekstu/JS/CSS/SVG; `Cache-Control: public, immutable` na rok dla `/assets/`, `no-cache` dla `index.html`, żeby nowe buildy były widoczne od razu przy długim cache zasobów statycznych.
+
+### SPA i nawigacja
+
+- **`history.scrollRestoration = 'manual'`** — przewidywalne zachowanie scrolla przy odświeżeniu i routingu w SPA (mniej „skoków” po wejściu na stronę główną).
+- **EmailJS** — używany na trasie `/kontakt`, nie na stronie głównej.
 
 ---
 
