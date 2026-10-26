@@ -143,20 +143,61 @@ Szkolka_Stramnica/
 
 ## Architektura
 
-```
-Przeglądarka
-    │
-    ▼
-Vue 3 SPA (Vue Router)
-    ├── /         → HomeView (Hero, Opis, Oferta, Galeria, GoogleMap)
-    ├── /kontakt  → Kontakt.vue → EmailJS
-    └── /*        → NotFound.vue
+### Przepływ żądania
+
+```mermaid
+flowchart TB
+  user[Przeglądarka]
+  cf[Cloudflare]
+  subgraph host [Serwer Proxmox]
+    subgraph compose [Docker Compose]
+      fe["szkolka-web<br/>Nginx + zbudowany Vue"]
+    end
+  end
+  emailjs[EmailJS]
+  gmaps[Google Maps Embed]
+
+  user -->|HTTPS| cf
+  cf -->|HTTP :80| fe
+  user -->|formularz /kontakt| emailjs
+  user -->|iframe #map| gmaps
 ```
 
-| Warstwa | Rola |
-|---------|------|
-| `App.vue` | Layout — navbar + `<router-view>` |
-| `views/` | Strony routera |
-| `components/` | Sekcje UI strony głównej |
+Strona nie ma własnego API — po załadowaniu SPA cała logika UI działa w przeglądarce; formularz i mapa wołają usługi zewnętrzne bezpośrednio z klienta.
 
-**Build Docker:** `node:20-alpine` (Vite) → `nginx:alpine` (`dist/` + `try_files` pod SPA). Klucze EmailJS jako build args `VITE_*`.
+### Warstwy kodu
+
+| Część | Rola |
+|-------|------|
+| `App.vue` | Layout: navbar, opakowanie treści (`router-view`) |
+| `router/index.js` | Trasy SPA, strona 404 |
+| `views/` | Widoki pełnoekranowe (`HomeView`, `Kontakt`, `NotFound`) |
+| `components/` | Sekcje strony głównej (Hero, Opis, Oferta, Galeria, mapa, navbar) |
+| `assets/` | WebP (hero, galeria), logo, ikony SVG oferty |
+
+### Routing
+
+| Ścieżka | Widok | Zawartość |
+|---------|--------|-----------|
+| `/` | `HomeView.vue` | Hero (Swiper), O nas, Oferta, Galeria, `GoogleMap` |
+| `/kontakt` | `Kontakt.vue` | Dane kontaktowe, formularz → EmailJS |
+| `/*` | `NotFound.vue` | Strona błędu 404 |
+
+Kotwice na stronie głównej (`#opis`, `#oferta`, `#galeria`, `#map`) obsługiwane w navbarze bez osobnych tras.
+
+### Frontend
+
+- Jednostronicowa aplikacja **Vue 3** (Composition API), bundlowana przez **Vite**
+- **Vue Router** — historia przeglądarki, `scrollRestoration: manual` w `main.js`
+- Galeria: miniatury z `import.meta.glob`, pełne zdjęcia i lightbox na żądanie; `IntersectionObserver` przed załadowaniem siatki
+- Hero: osobne assety mobilne/desktopowe, preload pierwszego slajdu w `index.html`
+- Formularz kontaktowy: `@emailjs/browser` (identyfikatory z build args `VITE_EMAILJS_*`)
+
+### Wdrożenie
+
+```
+Internet → Cloudflare (HTTPS) → Proxmox → Docker Compose
+                                              └── szkolka-web  Nginx :80
+```
+
+Kontener budowany z `szkolka-stramnica/Dockerfile`: etap **Node 20** (`npm run build`), etap **nginx:alpine** z `dist/` i `nginx.conf` (`gzip`, cache dla `/assets/`, `try_files` pod SPA). Zmienne EmailJS przekazywane jako `build.args` w `docker-compose.yml`.
